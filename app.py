@@ -258,6 +258,42 @@ st.markdown(f"""
         border-radius: 10px !important;
     }}
 
+    /* 9. Metrics & KPIs */
+    [data-testid="stMetricValue"] {{
+        color: {kpi_num_color} !important;
+        font-weight: 800 !important;
+    }}
+    [data-testid="stMetricLabel"] {{
+        color: {subtext_color} !important;
+        font-weight: 600 !important;
+    }}
+
+    /* 10. Expanders */
+    [data-testid="stExpander"] {{
+        background-color: {card_bg} !important;
+        border: 1px solid {border_color} !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+    }}
+    [data-testid="stExpander"] details {{
+        background-color: {card_bg} !important;
+    }}
+    [data-testid="stExpander"] summary {{
+        color: {text_color} !important;
+    }}
+    [data-testid="stExpander"] summary span, [data-testid="stExpander"] summary p {{
+        color: {text_color} !important;
+        font-weight: 700 !important;
+    }}
+
+    /* 11. General Main Canvas Text */
+    section.main p, section.main li {{
+        color: {text_color} !important;
+    }}
+    section.main strong, section.main b {{
+        color: {text_color} !important;
+    }}
+
     /* Top Brand Banner */
     .brand-container {{
         background: {banner_bg};
@@ -436,6 +472,76 @@ filtered_data = df_main[
     (df_main["reporter_country"].isin(selected_reporters if selected_reporters else reporters_list))
 ].copy()
 
+# -----------------------------------------------------------------------------
+# MASTER PLOTLY STYLING ENGINE (AUTHENTIC DARK & LIGHT MODES)
+# -----------------------------------------------------------------------------
+def apply_plot_theme(fig, is_dark, height=None, title=None):
+    """
+    Applies publication-grade, high-contrast typography, axes, ticks, gridlines,
+    and legends tailored specifically for Dark Mode and Normal (Light) Mode.
+    Guarantees zero washed-out labels, faint gray text, or illegible graphics.
+    """
+    if is_dark:
+        font_color = "#F8FAFC"
+        axis_title_color = "#F8FAFC"
+        tick_color = "#CBD5E1"
+        grid_color = "rgba(255, 255, 255, 0.10)"
+        line_color = "#475569"
+        plotly_temp = "plotly_dark"
+    else:
+        font_color = "#0F172A"
+        axis_title_color = "#0F172A"
+        tick_color = "#1E293B"
+        grid_color = "rgba(15, 23, 42, 0.08)"
+        line_color = "#94A3B8"
+        plotly_temp = "plotly_white"
+
+    layout_dict = dict(
+        template=plotly_temp,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Plus Jakarta Sans, sans-serif", size=12, color=font_color),
+        margin=dict(l=35, r=25, t=55 if title else 25, b=35),
+        legend=dict(
+            font=dict(color=font_color, size=11, family="Plus Jakarta Sans, sans-serif"),
+            title=dict(font=dict(color=font_color, size=12, family="Plus Jakarta Sans, sans-serif")),
+            bgcolor="rgba(0,0,0,0)"
+        )
+    )
+    if height:
+        layout_dict["height"] = height
+    if title:
+        layout_dict["title"] = dict(
+            text=title,
+            font=dict(family="Plus Jakarta Sans, sans-serif", size=14, color=font_color)
+        )
+
+    fig.update_layout(**layout_dict)
+
+    fig.update_xaxes(
+        title_font=dict(color=axis_title_color, size=12, family="Plus Jakarta Sans, sans-serif"),
+        tickfont=dict(color=tick_color, size=11, family="Plus Jakarta Sans, sans-serif"),
+        gridcolor=grid_color,
+        zerolinecolor=grid_color,
+        showgrid=True,
+        showline=True,
+        linecolor=line_color,
+        linewidth=1
+    )
+
+    fig.update_yaxes(
+        title_font=dict(color=axis_title_color, size=12, family="Plus Jakarta Sans, sans-serif"),
+        tickfont=dict(color=tick_color, size=11, family="Plus Jakarta Sans, sans-serif"),
+        gridcolor=grid_color,
+        zerolinecolor=grid_color,
+        showgrid=True,
+        showline=True,
+        linecolor=line_color,
+        linewidth=1
+    )
+
+    return fig
+
 # =============================================================================
 # MODULE 1: EXECUTIVE COMMAND CENTER
 # =============================================================================
@@ -518,20 +624,16 @@ if app_mode == "⚡ Executive Dashboard":
             y="trade_value_usd",
             color="trade_flow",
             barmode="group",
-            template=plotly_template,
             color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
             labels={"trade_value_usd": "Trade Value (USD)", "refYear": "Year", "trade_flow": "Trade Direction"}
         )
+        apply_plot_theme(fig_annual, dark_mode, height=390)
         fig_annual.update_layout(
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            yaxis=dict(tickformat="$.2s", gridcolor=grid_color),
+            yaxis=dict(tickformat="$.2s"),
             xaxis=dict(tickmode="linear", dtick=1),
-            legend=dict(orientation="h", y=1.18, x=0.0),
-            height=390
+            legend=dict(orientation="h", y=1.18, x=0.0)
         )
-        st.plotly_chart(fig_annual, use_container_width=True)
+        st.plotly_chart(fig_annual, use_container_width=True, theme=None)
 
     with col_chart2:
         st.markdown("<div class=\"content-header\">⚗️ Product Portfolio Share of Trade (%)</div>", unsafe_allow_html=True)
@@ -554,19 +656,15 @@ if app_mode == "⚡ Executive Dashboard":
             color="trade_flow",
             barmode="group",
             orientation="h",
-            template=plotly_template,
             color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
-            labels={"share_pct": "Share of Trade (%)", "commodity_name": "Commodity", "trade_flow": ""}
+            labels={"share_pct": "Share of Trade (%)", "commodity_name": "Commodity", "trade_flow": "Trade Direction"}
         )
+        apply_plot_theme(fig_prod, dark_mode, height=390)
         fig_prod.update_layout(
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            xaxis=dict(ticksuffix="%", gridcolor=grid_color),
-            legend=dict(orientation="h", y=1.18, x=0.0),
-            height=390
+            xaxis=dict(ticksuffix="%"),
+            legend=dict(orientation="h", y=1.18, x=0.0)
         )
-        st.plotly_chart(fig_prod, use_container_width=True)
+        st.plotly_chart(fig_prod, use_container_width=True, theme=None)
 
     st.markdown("---")
     st.markdown("""
@@ -600,20 +698,27 @@ elif app_mode == "🌐 Global Trade Map & Flows":
         color="Balance_Billions",
         hover_name="reporter_country",
         hover_data={"Value_Billions": ":$,.2fB", "Balance_Billions": ":$,.2fB", "ISO": False},
-        color_continuous_scale=["#F43F5E", "#38BDF8", "#10B981"] if dark_mode else ["#E63946", "#F1FAEE", "#2A9D8F"],
+        color_continuous_scale=["#F43F5E", "#38BDF8", "#10B981"] if dark_mode else ["#DC2626", "#E2E8F0", "#059669"],
         color_continuous_midpoint=0,
-        template=plotly_template,
-        labels={"Balance_Billions": "Net Trade Balance ($B)"},
-        title="Global Petrochemical Net Trade Balance by Economy (USD Billions)"
+        labels={"Balance_Billions": "Net Trade Balance ($B)"}
     )
+    apply_plot_theme(fig_map, dark_mode, height=520, title="Global Petrochemical Net Trade Balance by Economy (USD Billions)")
     fig_map.update_layout(
-        geo=dict(showframe=False, showcoastlines=True, bgcolor=map_geo_bg, projection_type="equirectangular"),
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(l=0, r=0, t=40, b=0),
-        height=520
+        geo=dict(
+            showframe=False,
+            showcoastlines=True,
+            showland=True,
+            showocean=True,
+            landcolor="#16223F" if dark_mode else "#F1F5F9",
+            oceancolor="#0B132B" if dark_mode else "#F8FAFC",
+            coastlinecolor="#475569" if dark_mode else "#94A3B8",
+            countrycolor="#334155" if dark_mode else "#CBD5E1",
+            bgcolor="rgba(0,0,0,0)",
+            projection_type="equirectangular"
+        ),
+        margin=dict(l=0, r=0, t=50, b=0)
     )
-    st.plotly_chart(fig_map, use_container_width=True)
+    st.plotly_chart(fig_map, use_container_width=True, theme=None)
 
     st.subheader("Geographical Balance Scorecard")
     st.dataframe(map_data[["reporter_country", "ISO", "Value_Billions", "Balance_Billions", "Total_Volume_MT"]].rename(
@@ -640,34 +745,47 @@ elif app_mode == "🔬 Olefins vs Aromatics Matrix":
 
     c1, c2 = st.columns(2)
     with c1:
-        st.subheader("Trade Value by Chemical Family")
+        st.markdown("<div class=\"content-header\">📊 Trade Value by Chemical Family</div>", unsafe_allow_html=True)
         family_sum = filtered_data.groupby(["chemical_family", "trade_flow"])["trade_value_usd"].sum().reset_index()
         fig_fam = px.bar(
-            family_sum, x="chemical_family", y="trade_value_usd", color="trade_flow",
+            family_sum,
+            x="chemical_family",
+            y="trade_value_usd",
+            color="trade_flow",
             barmode="group",
-            template=plotly_template,
             color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
-            labels={"trade_value_usd": "Value (USD)", "chemical_family": ""}
+            labels={"trade_value_usd": "Value (USD)", "chemical_family": "Chemical Family", "trade_flow": "Trade Direction"}
         )
+        apply_plot_theme(fig_fam, dark_mode, height=430)
         fig_fam.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-            yaxis=dict(tickformat="$.2s", gridcolor=grid_color)
+            yaxis=dict(tickformat="$.2s"),
+            legend=dict(orientation="h", y=1.18, x=0.0)
         )
-        st.plotly_chart(fig_fam, use_container_width=True)
+        st.plotly_chart(fig_fam, use_container_width=True, theme=None)
 
     with c2:
-        st.subheader("Benchmark Unit Price (USD/MT) Distribution")
+        st.markdown("<div class=\"content-header\">📦 Benchmark Unit Price (USD/MT) Distribution</div>", unsafe_allow_html=True)
         fig_box = px.box(
             filtered_data.dropna(subset=["trade_unit_value_usd_mt"]),
-            x="commodity_name", y="trade_unit_value_usd_mt", color="chemical_family",
-            template=plotly_template,
-            labels={"trade_unit_value_usd_mt": "Unit Price (USD/MT)", "commodity_name": "Commodity"}
+            x="commodity_name",
+            y="trade_unit_value_usd_mt",
+            color="chemical_family",
+            color_discrete_map={
+                "Light Olefins (Aliphatics)": "#00ADB5" if dark_mode else "#0284C7",
+                "Aromatic Hydrocarbons (Cyclics)": "#F59E0B" if dark_mode else "#D97706"
+            },
+            labels={"trade_unit_value_usd_mt": "Unit Price (USD/MT)", "commodity_name": "Commodity", "chemical_family": "Chemical Family"}
         )
+        apply_plot_theme(fig_box, dark_mode, height=430)
         fig_box.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-            yaxis=dict(gridcolor=grid_color)
+            legend=dict(orientation="h", y=1.18, x=0.0)
         )
-        st.plotly_chart(fig_box, use_container_width=True)
+        fig_box.update_traces(
+            boxmean=True,
+            marker=dict(size=4, opacity=0.8),
+            line=dict(width=1.6)
+        )
+        st.plotly_chart(fig_box, use_container_width=True, theme=None)
 
 # =============================================================================
 # MODULE 4: BILATERAL CORRIDORS & SANKEY
@@ -693,29 +811,26 @@ elif app_mode == "🗺️ Bilateral Corridors & Sankey":
     targets = [node_map[p] for p in top_corridors["partner_country"]]
     values = top_corridors["Total_Value_B"].tolist()
 
-    sankey_node_color = "#38BDF8" if dark_mode else "#00ADB5"
-    sankey_link_color = "rgba(56, 189, 248, 0.35)" if dark_mode else "rgba(0, 173, 181, 0.35)"
+    sankey_node_color = "#38BDF8" if dark_mode else "#0284C7"
+    sankey_link_color = "rgba(56, 189, 248, 0.4)" if dark_mode else "rgba(2, 132, 199, 0.35)"
 
     fig_sankey = go.Figure(data=[go.Sankey(
         node=dict(
-            pad=15, thickness=20,
-            line=dict(color="black", width=0.5),
+            pad=15,
+            thickness=20,
+            line=dict(color="#F8FAFC" if dark_mode else "#0F172A", width=1.0),
             label=all_nodes,
             color=sankey_node_color
         ),
         link=dict(
-            source=sources, target=targets, value=values,
+            source=sources,
+            target=targets,
+            value=values,
             color=sankey_link_color
         )
     )])
-    fig_sankey.update_layout(
-        title_text="Top Global Petrochemical Trade Corridors (Billion USD)",
-        font=dict(size=11, color=text_color),
-        template=plotly_template,
-        paper_bgcolor="rgba(0,0,0,0)",
-        height=520
-    )
-    st.plotly_chart(fig_sankey, use_container_width=True)
+    apply_plot_theme(fig_sankey, dark_mode, height=520, title="Top Global Petrochemical Trade Corridors (Billion USD)")
+    st.plotly_chart(fig_sankey, use_container_width=True, theme=None)
 
     st.subheader("Top Bilateral Trade Routes Table")
     st.dataframe(top_corridors.rename(columns={
