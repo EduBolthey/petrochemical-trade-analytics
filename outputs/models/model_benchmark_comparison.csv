@@ -1,0 +1,5 @@
+Model,Target,MAE_USD,RMSE_USD,R2_Score,MAPE_Percent
+Linear Regression,Trade_Value_USD,39211561.85,50140093.71,0.9069,11.06
+Ridge Regression (Alpha=1.0),Trade_Value_USD,39199670.67,50165946.39,0.9068,11.04
+Random Forest Regressor,Trade_Value_USD,28372854.57,37772408.08,0.9471,8.19
+Gradient Boosting Regressor,Trade_Value_USD,26407553.32,35119017.67,0.9543,7.52

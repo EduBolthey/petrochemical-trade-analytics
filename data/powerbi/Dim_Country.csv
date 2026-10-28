@@ -1,0 +1,21 @@
+country_name,iso_code,country_code,region,country_id
+Japan,JPN,392,East Asia,1
+Saudi Arabia,SAU,682,Middle East,2
+Netherlands,NLD,528,Europe,3
+Rep. of Korea,KOR,410,East Asia,4
+Germany,DEU,276,Europe,5
+USA,USA,842,North America,6
+India,IND,356,South Asia,7
+China,CHN,156,Asia-Pacific,8
+United Arab Emirates,ARE,784,Middle East,9
+Italy,ITA,380,Europe,10
+France,FRA,250,Europe,11
+Taiwan,TWN,158,East Asia,12
+Brazil,BRA,76,Latin America,13
+United Kingdom,GBR,826,Europe,14
+Malaysia,MYS,458,Southeast Asia,15
+Singapore,SGP,702,Southeast Asia,16
+Thailand,THA,764,Southeast Asia,17
+Mexico,MEX,484,North America,18
+Belgium,BEL,56,Europe,19
+Canada,CAN,124,North America,20

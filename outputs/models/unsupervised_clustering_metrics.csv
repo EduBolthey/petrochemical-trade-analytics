@@ -1,0 +1,5 @@
+Clusters_k,Silhouette_Score,Davies_Bouldin_Index,Calinski_Harabasz_Index
+2,0.4399,0.9111,28.27
+3,0.446,0.6109,26.64
+4,0.4525,0.7755,31.43
+5,0.4592,0.7295,37.85

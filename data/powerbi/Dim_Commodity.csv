@@ -1,0 +1,6 @@
+cmdCode,commodity_name,cmdDesc,chemical_group,commodity_id
+290220,Benzene,Benzene (Pure Aromatic Hydrocarbon),Aromatics,1
+290122,Propylene,Propylene (Propenes),Olefins,2
+290230,Toluene,Toluene (Methylbenzene),Aromatics,3
+290121,Ethylene,"Ethylene (Ethane, Ethyne, Ethylene)",Olefins,4
+290124,Butadiene,"Buta-1,3-diene and Isoprene (Butadiene)",Olefins,5

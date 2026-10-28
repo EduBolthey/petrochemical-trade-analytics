@@ -1,0 +1,38 @@
+Feature,Importance
+trade_volume_mt,0.8212467208856155
+crude_oil_proxy,0.13163466486386485
+refYear,0.011393575739508957
+trade_flow_Export,0.005090676084491109
+trade_flow_Import,0.004539795995121377
+commodity_name_Benzene,0.004479817081717133
+commodity_name_Propylene,0.0037329508638510697
+reporter_country_Japan,0.0021007830176219037
+commodity_name_Toluene,0.0014658530701047439
+partner_country_USA,0.0012424562700175945
+quarter,0.0012049459702809099
+reporter_country_Germany,0.000987487409818872
+partner_country_Canada,0.0009007521380113312
+partner_country_France,0.000868809235670241
+partner_country_Taiwan,0.0008361827029016223
+partner_country_India,0.0008294153893732866
+partner_country_United Arab Emirates,0.0007009115685814414
+partner_country_Saudi Arabia,0.0006022800691641556
+partner_country_China,0.0006001642557464117
+partner_country_Mexico,0.0005743766415461161
+reporter_country_USA,0.0005258214871677068
+reporter_country_Saudi Arabia,0.0005022627221094678
+reporter_country_China,0.0004910871305329771
+reporter_country_Netherlands,0.00040651617738832706
+reporter_country_Rep. of Korea,0.000379145783123528
+commodity_name_Ethylene,0.0003750863230278543
+reporter_country_India,0.00030688089265916186
+partner_country_United Kingdom,0.00030272583780632627
+partner_country_Italy,0.0002949115837556598
+partner_country_Belgium,0.00025595114113223093
+partner_country_Rep. of Korea,0.00023634052338538885
+partner_country_Brazil,0.00021644936332712938
+partner_country_Germany,0.00020865894034392918
+partner_country_Thailand,0.0001851696398258074
+partner_country_Singapore,0.00014254560518360624
+partner_country_Malaysia,0.00010423035033450561
+commodity_name_Butadiene,3.3597245887851134e-05
