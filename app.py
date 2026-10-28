@@ -322,6 +322,11 @@ st.markdown(f"""
         color: #CBD5E1 !important;
         font-weight: 500;
     }}
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {{
+        color: #F8FAFC !important;
+        font-weight: 600 !important;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -422,13 +427,13 @@ if app_mode == "⚡ Executive Dashboard":
             labels={"trade_value_usd": "Trade Value (USD)", "refYear": "Year", "trade_flow": "Trade Direction"}
         )
         fig_annual.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
+            margin=dict(l=20, r=20, t=50, b=20),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
             yaxis=dict(tickformat="$.2s", gridcolor=grid_color),
             xaxis=dict(tickmode="linear", dtick=1),
-            legend=dict(orientation="h", y=1.05, x=0.01),
-            height=370
+            legend=dict(orientation="h", y=1.18, x=0.0),
+            height=390
         )
         st.plotly_chart(fig_annual, use_container_width=True)
 
@@ -458,12 +463,12 @@ if app_mode == "⚡ Executive Dashboard":
             labels={"share_pct": "Share of Trade (%)", "commodity_name": "Commodity", "trade_flow": ""}
         )
         fig_prod.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
+            margin=dict(l=20, r=20, t=50, b=20),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
             xaxis=dict(ticksuffix="%", gridcolor=grid_color),
-            legend=dict(orientation="h", y=1.05, x=0.01),
-            height=370
+            legend=dict(orientation="h", y=1.18, x=0.0),
+            height=390
         )
         st.plotly_chart(fig_prod, use_container_width=True)
 
