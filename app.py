@@ -4,7 +4,7 @@ PETROFLOW INTELLIGENCE™ - Advanced Global Petrochemical Trade Analytics & Pred
 ========================================================================================
 Enterprise-Grade Academic Capstone Intelligence Platform
 Distinctive Architecture:
-- Next-Gen Executive Command Center UI (Modern Glassmorphic styling, high-contrast palette)
+- Next-Gen Executive Command Center UI with Live Dark/Light Mode Switcher
 - Interactive Global Choropleth Trade Map (Trade intensity across 8 reporter giants + global partners)
 - Bilateral Supply Chain Sankey Corridors (Exporters -> Flow -> Importers)
 - Cracking Economics & Feedstock Spread Intelligence (Olefins vs Aromatics)
@@ -35,181 +35,6 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------------------------------
-# BESPOKE MODERN ENTERPRISE CSS (UNIQUE LOOK & FEEL)
-# -----------------------------------------------------------------------------
-st.markdown("""
-<style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    /* Top Brand Banner */
-    .brand-container {
-        background: linear-gradient(135deg, #0A192F 0%, #112240 50%, #1B3A4B 100%);
-        border-radius: 16px;
-        padding: 24px 30px;
-        color: #FFFFFF;
-        box-shadow: 0 10px 25px rgba(10, 25, 47, 0.2);
-        margin-bottom: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    .brand-title {
-        font-size: 2.2rem;
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        color: #F8FAFC;
-        margin-bottom: 4px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .brand-badge {
-        background: linear-gradient(135deg, #00ADB5 0%, #007580 100%);
-        color: #FFFFFF;
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 20px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .brand-subtitle {
-        font-size: 0.95rem;
-        color: #94A3B8;
-        font-weight: 400;
-    }
-    .live-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(16, 185, 129, 0.15);
-        color: #10B981;
-        border: 1px solid rgba(16, 185, 129, 0.3);
-        padding: 6px 14px;
-        border-radius: 30px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        font-family: 'JetBrains Mono', monospace;
-    }
-    .pulse-dot {
-        width: 8px;
-        height: 8px;
-        background-color: #10B981;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #10B981;
-    }
-
-    /* Executive KPI Cards */
-    .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 14px;
-        margin-bottom: 22px;
-    }
-    .kpi-box {
-        background: #FFFFFF;
-        border-radius: 14px;
-        padding: 18px 20px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    .kpi-box:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-    }
-    .kpi-box::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #00ADB5, #3B82F6);
-    }
-    .kpi-box.deficit::before {
-        background: linear-gradient(90deg, #F43F5E, #FB7185);
-    }
-    .kpi-box.emerald::before {
-        background: linear-gradient(90deg, #10B981, #34D399);
-    }
-    .kpi-box.amber::before {
-        background: linear-gradient(90deg, #F59E0B, #FBBF24);
-    }
-    .kpi-box.purple::before {
-        background: linear-gradient(90deg, #8B5CF6, #A78BFA);
-    }
-    .kpi-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #64748B;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        margin-bottom: 6px;
-    }
-    .kpi-num {
-        font-size: 1.85rem;
-        font-weight: 800;
-        color: #0F172A;
-        letter-spacing: -0.5px;
-        line-height: 1.1;
-    }
-    .kpi-footnote {
-        font-size: 0.75rem;
-        color: #94A3B8;
-        margin-top: 6px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    /* Content Card Container */
-    .content-card {
-        background: #FFFFFF;
-        border-radius: 14px;
-        padding: 22px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-        margin-bottom: 20px;
-    }
-    .content-header {
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #0F172A;
-        margin-bottom: 14px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    /* Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background-color: #0B192C !important;
-        color: #E2E8F0 !important;
-    }
-    section[data-testid="stSidebar"] .stMarkdown p, 
-    section[data-testid="stSidebar"] .stMarkdown h1, 
-    section[data-testid="stSidebar"] .stMarkdown h2, 
-    section[data-testid="stSidebar"] .stMarkdown h3 {
-        color: #F8FAFC !important;
-    }
-    section[data-testid="stSidebar"] .stRadio label {
-        color: #CBD5E1 !important;
-        font-weight: 500;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# -----------------------------------------------------------------------------
 # DATA CACHING & INITIALIZATION
 # -----------------------------------------------------------------------------
 @st.cache_data
@@ -233,19 +58,22 @@ df_main = get_clean_dataset()
 model_gb = get_trained_model()
 
 # -----------------------------------------------------------------------------
-# SIDEBAR NAVIGATION & COMMAND FILTERS
+# SIDEBAR THEME SWITCHER & CONTROLS
 # -----------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("""
-    <div style="padding: 10px 0 18px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;">
+    <div style="padding: 10px 0 14px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 14px;">
         <div style="font-size: 1.35rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px;">
             ⚡ PetroFlow <span style="color:#00ADB5;">AI</span>
         </div>
-        <div style="font-size: 0.75rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">
+        <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">
             Enterprise Trade Intelligence
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+    # DYNAMIC DARK MODE TOGGLE
+    dark_mode = st.toggle("🌙 Dark Mode", value=True)
 
     app_mode = st.radio(
         "Navigation Menu",
@@ -291,12 +119,211 @@ with st.sidebar:
     )
     
     st.markdown("""
-    <div style="margin-top: 30px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.72rem; color: #94A3B8;">
+    <div style="margin-top: 24px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.72rem; color: #94A3B8;">
         <b>Engine:</b> UN Comtrade v2.4<br/>
         <b>HS Taxonomy:</b> 290121 - 290230<br/>
         <b>ML Model:</b> GradientBoost (R²=0.954)
     </div>
     """, unsafe_allow_html=True)
+
+# -----------------------------------------------------------------------------
+# DYNAMIC THEME COLOR ENGINE (DARK VS LIGHT)
+# -----------------------------------------------------------------------------
+if dark_mode:
+    bg_color = "#0B132B"
+    card_bg = "#1C2541"
+    border_color = "#2A3A5E"
+    text_color = "#F8FAFC"
+    subtext_color = "#94A3B8"
+    kpi_num_color = "#38BDF8"
+    plotly_template = "plotly_dark"
+    grid_color = "rgba(255, 255, 255, 0.08)"
+    map_geo_bg = "#0B132B"
+    banner_bg = "linear-gradient(135deg, #0A192F 0%, #112240 50%, #1B3A4B 100%)"
+else:
+    bg_color = "#F8FAFC"
+    card_bg = "#FFFFFF"
+    border_color = "#E2E8F0"
+    text_color = "#0F172A"
+    subtext_color = "#64748B"
+    kpi_num_color = "#0F172A"
+    plotly_template = "plotly_white"
+    grid_color = "rgba(0, 0, 0, 0.06)"
+    map_geo_bg = "#F8FAFC"
+    banner_bg = "linear-gradient(135deg, #1E293B 0%, #334155 50%, #1D7874 100%)"
+
+st.markdown(f"""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    html, body, [class*="css"], .stApp {{
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: {bg_color} !important;
+        color: {text_color} !important;
+    }}
+
+    /* Top Brand Banner */
+    .brand-container {{
+        background: {banner_bg};
+        border-radius: 16px;
+        padding: 24px 30px;
+        color: #FFFFFF;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }}
+    .brand-title {{
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #F8FAFC;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }}
+    .brand-badge {{
+        background: linear-gradient(135deg, #00ADB5 0%, #007580 100%);
+        color: #FFFFFF;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }}
+    .brand-subtitle {{
+        font-size: 0.92rem;
+        color: #CBD5E1;
+        font-weight: 400;
+    }}
+    .live-indicator {{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
+    }}
+    .pulse-dot {{
+        width: 8px;
+        height: 8px;
+        background-color: #10B981;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #10B981;
+    }}
+
+    /* Executive KPI Cards */
+    .kpi-grid {{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+        margin-bottom: 22px;
+    }}
+    .kpi-box {{
+        background: {card_bg};
+        border-radius: 14px;
+        padding: 18px 20px;
+        border: 1px solid {border_color};
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }}
+    .kpi-box:hover {{
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px -3px rgba(0, 173, 181, 0.15);
+    }}
+    .kpi-box::before {{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #00ADB5, #3B82F6);
+    }}
+    .kpi-box.deficit::before {{
+        background: linear-gradient(90deg, #F43F5E, #FB7185);
+    }}
+    .kpi-box.emerald::before {{
+        background: linear-gradient(90deg, #10B981, #34D399);
+    }}
+    .kpi-box.amber::before {{
+        background: linear-gradient(90deg, #F59E0B, #FBBF24);
+    }}
+    .kpi-box.purple::before {{
+        background: linear-gradient(90deg, #8B5CF6, #A78BFA);
+    }}
+    .kpi-label {{
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: {subtext_color};
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 6px;
+    }}
+    .kpi-num {{
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: {kpi_num_color};
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+    }}
+    .kpi-footnote {{
+        font-size: 0.74rem;
+        color: {subtext_color};
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }}
+
+    /* Content Card Container */
+    .content-card {{
+        background: {card_bg};
+        border-radius: 14px;
+        padding: 22px;
+        border: 1px solid {border_color};
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }}
+    .content-header {{
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: {text_color};
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }}
+
+    /* Sidebar Styling */
+    section[data-testid="stSidebar"] {{
+        background-color: #0A1428 !important;
+        color: #E2E8F0 !important;
+    }}
+    section[data-testid="stSidebar"] .stMarkdown p, 
+    section[data-testid="stSidebar"] .stMarkdown h1, 
+    section[data-testid="stSidebar"] .stMarkdown h2, 
+    section[data-testid="stSidebar"] .stMarkdown h3 {{
+        color: #F8FAFC !important;
+    }}
+    section[data-testid="stSidebar"] .stRadio label {{
+        color: #CBD5E1 !important;
+        font-weight: 500;
+    }}
+</style>
+""", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # DATA FILTERING LOGIC
@@ -312,7 +339,6 @@ filtered_data = df_main[
 # MODULE 1: EXECUTIVE COMMAND CENTER
 # =============================================================================
 if app_mode == "⚡ Executive Dashboard":
-    # Top Brand Header Banner
     st.markdown("""
     <div class="brand-container">
         <div>
@@ -341,7 +367,6 @@ if app_mode == "⚡ Executive Dashboard":
     total_volume_mt = filtered_data["trade_volume_mt"].sum()
     record_count = len(filtered_data)
     valid_volume_pct = (filtered_data["trade_volume_mt"] > 0).mean() * 100 if record_count > 0 else 0
-    weighted_tuv = (total_trade / total_volume_mt) if total_volume_mt > 0 else 0
 
     # Modern 6-Card KPI Grid
     st.markdown(f"""
@@ -392,14 +417,15 @@ if app_mode == "⚡ Executive Dashboard":
             y="trade_value_usd",
             color="trade_flow",
             barmode="group",
-            color_discrete_map={"Export": "#00ADB5", "Import": "#1E3E62"},
+            template=plotly_template,
+            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
             labels={"trade_value_usd": "Trade Value (USD)", "refYear": "Year", "trade_flow": "Trade Direction"}
         )
         fig_annual.update_layout(
             margin=dict(l=10, r=10, t=10, b=10),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            yaxis=dict(tickformat="$.2s", gridcolor="#F1F5F9"),
+            yaxis=dict(tickformat="$.2s", gridcolor=grid_color),
             xaxis=dict(tickmode="linear", dtick=1),
             legend=dict(orientation="h", y=1.05, x=0.01),
             height=370
@@ -427,26 +453,26 @@ if app_mode == "⚡ Executive Dashboard":
             color="trade_flow",
             barmode="group",
             orientation="h",
-            color_discrete_map={"Export": "#00ADB5", "Import": "#1E3E62"},
+            template=plotly_template,
+            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
             labels={"share_pct": "Share of Trade (%)", "commodity_name": "Commodity", "trade_flow": ""}
         )
         fig_prod.update_layout(
             margin=dict(l=10, r=10, t=10, b=10),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            xaxis=dict(ticksuffix="%", gridcolor="#F1F5F9"),
+            xaxis=dict(ticksuffix="%", gridcolor=grid_color),
             legend=dict(orientation="h", y=1.05, x=0.01),
             height=370
         )
         st.plotly_chart(fig_prod, use_container_width=True)
 
-    # Econometric Context & Highlights
     st.markdown("---")
     st.markdown("""
     ### 🔬 Academic Significance & Key Econometric Findings
     * **Feedstock Cracking Dichotomy:** Light Olefins (*Ethylene & Propylene*) represent **51.2%** of global trade value, dominated by low-cost ethane cracking from Saudi Arabia and US Gulf Coast export terminals.
     * **Aromatics & Cyclics:** Benzene and Toluene represent **41.4%** of trade value, with major structural refining flows out of South Korea and the Netherlands into China's heavy industrial synthesis corridors.
-    * **COVID-19 & Energy Crisis Shocks:** Statistically significant structural shifts occurred in 2020 (demand contraction) and 2022 (European gas crisis), driving unit clearing prices to historical peaks above \$1,200/MT ($p = 1.42 \times 10^{-6}$).
+    * **COVID-19 & Energy Crisis Shocks:** Statistically significant structural shifts occurred in 2020 (demand contraction) and 2022 (European gas crisis), driving unit clearing prices to historical peaks above $1,200/MT ($p = 1.42 \\times 10^{-6}$).
     """)
 
 # =============================================================================
@@ -467,26 +493,27 @@ elif app_mode == "🌐 Global Trade Map & Flows":
     map_data["Value_Billions"] = (map_data["Total_Value_USD"] / 1e9).round(2)
     map_data["Balance_Billions"] = (map_data["Net_Balance_USD"] / 1e9).round(2)
 
-    # Plotly Choropleth Map
     fig_map = px.choropleth(
         map_data,
         locations="ISO",
         color="Balance_Billions",
         hover_name="reporter_country",
         hover_data={"Value_Billions": ":$,.2fB", "Balance_Billions": ":$,.2fB", "ISO": False},
-        color_continuous_scale=["#E63946", "#F1FAEE", "#2A9D8F"],
+        color_continuous_scale=["#F43F5E", "#38BDF8", "#10B981"] if dark_mode else ["#E63946", "#F1FAEE", "#2A9D8F"],
         color_continuous_midpoint=0,
+        template=plotly_template,
         labels={"Balance_Billions": "Net Trade Balance ($B)"},
         title="Global Petrochemical Net Trade Balance by Economy (USD Billions)"
     )
     fig_map.update_layout(
-        geo=dict(showframe=False, showcoastlines=True, projection_type="equirectangular"),
+        geo=dict(showframe=False, showcoastlines=True, bgcolor=map_geo_bg, projection_type="equirectangular"),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
         margin=dict(l=0, r=0, t=40, b=0),
         height=520
     )
     st.plotly_chart(fig_map, use_container_width=True)
 
-    # Country Metric Grid
     st.subheader("Geographical Balance Scorecard")
     st.dataframe(map_data[["reporter_country", "ISO", "Value_Billions", "Balance_Billions", "Total_Volume_MT"]].rename(
         columns={
@@ -516,10 +543,15 @@ elif app_mode == "🔬 Olefins vs Aromatics Matrix":
         family_sum = filtered_data.groupby(["chemical_family", "trade_flow"])["trade_value_usd"].sum().reset_index()
         fig_fam = px.bar(
             family_sum, x="chemical_family", y="trade_value_usd", color="trade_flow",
-            barmode="group", color_discrete_map={"Export": "#00ADB5", "Import": "#FFB200"},
+            barmode="group",
+            template=plotly_template,
+            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
             labels={"trade_value_usd": "Value (USD)", "chemical_family": ""}
         )
-        fig_fam.update_layout(plot_bgcolor="rgba(0,0,0,0)", yaxis=dict(tickformat="$.2s"))
+        fig_fam.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+            yaxis=dict(tickformat="$.2s", gridcolor=grid_color)
+        )
         st.plotly_chart(fig_fam, use_container_width=True)
 
     with c2:
@@ -527,9 +559,13 @@ elif app_mode == "🔬 Olefins vs Aromatics Matrix":
         fig_box = px.box(
             filtered_data.dropna(subset=["trade_unit_value_usd_mt"]),
             x="commodity_name", y="trade_unit_value_usd_mt", color="chemical_family",
+            template=plotly_template,
             labels={"trade_unit_value_usd_mt": "Unit Price (USD/MT)", "commodity_name": "Commodity"}
         )
-        fig_box.update_layout(plot_bgcolor="rgba(0,0,0,0)")
+        fig_box.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+            yaxis=dict(gridcolor=grid_color)
+        )
         st.plotly_chart(fig_box, use_container_width=True)
 
 # =============================================================================
@@ -549,7 +585,6 @@ elif app_mode == "🗺️ Bilateral Corridors & Sankey":
 
     top_corridors = corridors.head(15)
 
-    # Create Sankey Diagram
     all_nodes = list(pd.concat([top_corridors["reporter_country"], top_corridors["partner_country"]]).unique())
     node_map = {name: i for i, name in enumerate(all_nodes)}
 
@@ -557,19 +592,28 @@ elif app_mode == "🗺️ Bilateral Corridors & Sankey":
     targets = [node_map[p] for p in top_corridors["partner_country"]]
     values = top_corridors["Total_Value_B"].tolist()
 
+    sankey_node_color = "#38BDF8" if dark_mode else "#00ADB5"
+    sankey_link_color = "rgba(56, 189, 248, 0.35)" if dark_mode else "rgba(0, 173, 181, 0.35)"
+
     fig_sankey = go.Figure(data=[go.Sankey(
         node=dict(
             pad=15, thickness=20,
             line=dict(color="black", width=0.5),
             label=all_nodes,
-            color="#00ADB5"
+            color=sankey_node_color
         ),
         link=dict(
             source=sources, target=targets, value=values,
-            color="rgba(0, 173, 181, 0.35)"
+            color=sankey_link_color
         )
     )])
-    fig_sankey.update_layout(title_text="Top Global Petrochemical Trade Corridors (Billion USD)", font_size=11, height=520)
+    fig_sankey.update_layout(
+        title_text="Top Global Petrochemical Trade Corridors (Billion USD)",
+        font=dict(size=11, color=text_color),
+        template=plotly_template,
+        paper_bgcolor="rgba(0,0,0,0)",
+        height=520
+    )
     st.plotly_chart(fig_sankey, use_container_width=True)
 
     st.subheader("Top Bilateral Trade Routes Table")
