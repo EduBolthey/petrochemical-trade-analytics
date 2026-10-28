@@ -131,11 +131,15 @@ with st.sidebar:
 # -----------------------------------------------------------------------------
 if dark_mode:
     bg_color = "#0B132B"
-    card_bg = "#1C2541"
-    border_color = "#2A3A5E"
+    card_bg = "#16223F"
+    input_bg = "#1F2D4D"
+    border_color = "#2E3F66"
     text_color = "#F8FAFC"
     subtext_color = "#94A3B8"
     kpi_num_color = "#38BDF8"
+    btn_bg = "#1F2D4D"
+    btn_text = "#F8FAFC"
+    btn_border = "#00ADB5"
     plotly_template = "plotly_dark"
     grid_color = "rgba(255, 255, 255, 0.08)"
     map_geo_bg = "#0B132B"
@@ -143,10 +147,14 @@ if dark_mode:
 else:
     bg_color = "#F8FAFC"
     card_bg = "#FFFFFF"
-    border_color = "#E2E8F0"
+    input_bg = "#F1F5F9"
+    border_color = "#CBD5E1"
     text_color = "#0F172A"
     subtext_color = "#64748B"
     kpi_num_color = "#0F172A"
+    btn_bg = "#FFFFFF"
+    btn_text = "#0F172A"
+    btn_border = "#CBD5E1"
     plotly_template = "plotly_white"
     grid_color = "rgba(0, 0, 0, 0.06)"
     map_geo_bg = "#F8FAFC"
@@ -160,6 +168,94 @@ st.markdown(f"""
         font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: {bg_color} !important;
         color: {text_color} !important;
+    }}
+
+    /* 1. Eliminate the huge white top bar */
+    header[data-testid="stHeader"], .stAppHeader, div[data-testid="stToolbar"], [data-testid="stHeader"] {{
+        background-color: {bg_color} !important;
+        background: {bg_color} !important;
+        color: {text_color} !important;
+    }}
+
+    /* 2. Page Container */
+    .stApp, [data-testid="stAppViewContainer"], .main, section.main {{
+        background-color: {bg_color} !important;
+        color: {text_color} !important;
+    }}
+
+    /* 3. Global Headings & Labels */
+    h1, h2, h3, h4, h5, h6, label, [data-testid="stWidgetLabel"] p {{
+        color: {text_color} !important;
+    }}
+
+    /* 4. Streamlit Download & Standard Buttons */
+    .stButton > button, .stDownloadButton > button, div[data-testid="stDownloadButton"] > button {{
+        background-color: {btn_bg} !important;
+        color: {btn_text} !important;
+        border: 1px solid {btn_border} !important;
+        border-radius: 8px !important;
+        padding: 10px 20px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+        width: 100% !important;
+        text-align: left !important;
+    }}
+    .stButton > button:hover, .stDownloadButton > button:hover, div[data-testid="stDownloadButton"] > button:hover {{
+        background-color: #00ADB5 !important;
+        color: #FFFFFF !important;
+        border-color: #00ADB5 !important;
+        box-shadow: 0 4px 15px rgba(0, 173, 181, 0.35) !important;
+    }}
+    .stButton > button p, .stDownloadButton > button p {{
+        color: {btn_text} !important;
+        font-weight: 600 !important;
+    }}
+    .stButton > button:hover p, .stDownloadButton > button:hover p {{
+        color: #FFFFFF !important;
+    }}
+
+    /* 5. Streamlit Selectboxes, Inputs & Popovers */
+    div[data-baseweb="select"] > div {{
+        background-color: {input_bg} !important;
+        color: {text_color} !important;
+        border: 1px solid {border_color} !important;
+        border-radius: 8px !important;
+    }}
+    div[data-baseweb="select"] * {{
+        color: {text_color} !important;
+    }}
+    div[data-baseweb="popover"], ul[role="listbox"] {{
+        background-color: {card_bg} !important;
+        color: {text_color} !important;
+        border: 1px solid {border_color} !important;
+    }}
+    li[role="option"] {{
+        background-color: {card_bg} !important;
+        color: {text_color} !important;
+    }}
+    li[role="option"]:hover, li[aria-selected="true"] {{
+        background-color: #00ADB5 !important;
+        color: #FFFFFF !important;
+    }}
+
+    /* 6. Form Inputs & Number Inputs */
+    div[data-baseweb="input"] > div, input, textarea {{
+        background-color: {input_bg} !important;
+        color: {text_color} !important;
+        border: 1px solid {border_color} !important;
+        border-radius: 8px !important;
+    }}
+
+    /* 7. Sliders */
+    [data-testid="stSlider"] label, [data-testid="stSlider"] div, [data-testid="stSlider"] span {{
+        color: {text_color} !important;
+    }}
+
+    /* 8. DataFrames & Tables */
+    [data-testid="stDataFrame"] {{
+        background-color: {card_bg} !important;
+        border: 1px solid {border_color} !important;
+        border-radius: 10px !important;
     }}
 
     /* Top Brand Banner */
@@ -759,21 +855,43 @@ elif app_mode == "📑 LMS Submission Deliverables":
 
     sub_dir = "submission_files"
     if os.path.exists(sub_dir):
-        files = os.listdir(sub_dir)
-        for f in files:
+        files = sorted(os.listdir(sub_dir))
+        deliv_cols = st.columns(2)
+        for i, f in enumerate(files):
             fp = os.path.join(sub_dir, f)
             size_kb = os.path.getsize(fp) / 1024
             
             c_icon = "📄"
-            if f.endswith(".pdf"): c_icon = "📕"
-            elif f.endswith(".xlsx"): c_icon = "📗"
-            elif f.endswith(".docx"): c_icon = "📘"
-            elif f.endswith(".csv"): c_icon = "📊"
+            doc_type = "Verified Data Output"
+            if f.endswith(".pdf"):
+                c_icon = "📕"
+                doc_type = "Academic Report (PDF)" if "Report" in f else "Power BI DAX Guide (PDF)"
+            elif f.endswith(".xlsx"):
+                c_icon = "📗"
+                doc_type = "Executive Financial Model (Excel)"
+            elif f.endswith(".docx"):
+                c_icon = "📘"
+                doc_type = "Academic Capstone Report (Word)"
+            elif f.endswith(".csv"):
+                c_icon = "📊"
+                doc_type = "CSV Tabular Dataset"
             
-            with open(fp, "rb") as file_bytes:
-                st.download_button(
-                    label=f"{c_icon} Download {f} ({size_kb:.1f} KB)",
-                    data=file_bytes,
-                    file_name=f,
-                    mime="application/octet-stream"
-                )
+            with deliv_cols[i % 2]:
+                st.markdown(f"""
+                <div class="content-card" style="margin-bottom: 8px; padding: 14px 18px;">
+                    <div style="font-size: 0.72rem; color: #00ADB5; font-weight: 700; text-transform: uppercase;">
+                        {c_icon} {doc_type} · {size_kb:.1f} KB
+                    </div>
+                    <div style="font-size: 0.95rem; font-weight: 700; color: {text_color}; margin: 3px 0 8px 0; word-break: break-all;">
+                        {f}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                with open(fp, "rb") as file_bytes:
+                    st.download_button(
+                        label=f"⬇️ Download {f}",
+                        data=file_bytes,
+                        file_name=f,
+                        mime="application/octet-stream",
+                        key=f"dl_{f}"
+                    )
