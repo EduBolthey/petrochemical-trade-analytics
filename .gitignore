@@ -35,10 +35,11 @@ ENV/
 .env.local
 
 # IDE configurations
-.vscode/
 .idea/
 *.swp
 *.swo
+*.backup
+*.bak
 
 # Friend project archive/temp inspection folder
 friend_project/

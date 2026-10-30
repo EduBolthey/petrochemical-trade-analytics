@@ -3,15 +3,15 @@
 PETROFLOW INTELLIGENCE™ - Advanced Global Petrochemical Trade Analytics & Predictive AI
 ========================================================================================
 Enterprise-Grade Academic Capstone Intelligence Platform
-Distinctive Architecture:
-- Next-Gen Executive Command Center UI with Live Dark/Light Mode Switcher
-- Interactive Global Choropleth Trade Map (Trade intensity across 8 reporter giants + global partners)
-- Bilateral Supply Chain Sankey Corridors (Exporters -> Flow -> Importers)
+Modernized UI Architecture:
+- Unified Executive Command Center with High-Contrast Dark/Light Theming
+- Natural Earth Global Choropleth with Live Multi-Metric Selectors
+- Multi-Chrominance Bilateral Supply Chain Sankey Corridors
 - Cracking Economics & Feedstock Spread Intelligence (Olefins vs Aromatics)
-- Real-Time Econometric Hypothesis Testing Lab (Welch's t-test, ANOVA, Pearson elasticity)
-- Live Scenario Simulator & Stress-Testing Studio (Crude oil shock, tariff impact)
-- Embedded SQL Query Terminal (Live SQLite queries with custom presets)
-- Centralized Deliverables Hub (Direct 1-click downloads for PDF, DOCX, XLSX, CSV)
+- Visual Econometric Hypothesis Lab with Real Analytical Distribution Curves
+- Live Scenario Simulator with Real-Time Brent Crude Sensitivity Shock Curves
+- Interactive SQL Terminal with Star Schema Browser & Formatted Grid
+- Centralized Deliverables Hub with Direct 1-Click Downloads & Data Previews
 ========================================================================================
 """
 
@@ -23,12 +23,14 @@ import plotly.graph_objects as go
 import sqlite3
 import joblib
 import os
+import time
+from scipy import stats
 
 # -----------------------------------------------------------------------------
 # PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="PetroFlow Intelligence™ | Petrochemical Trade Analytics",
+    page_title="PetroFlow Intelligence™ | Global Petrochemical Trade Analytics",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -62,19 +64,21 @@ model_gb = get_trained_model()
 # -----------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("""
-    <div style="padding: 10px 0 14px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 14px;">
-        <div style="font-size: 1.35rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px;">
-            ⚡ PetroFlow <span style="color:#00ADB5;">AI</span>
+    <div style="padding: 6px 0 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 14px;">
+        <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+            <span>⚡ PetroFlow</span> <span style="background: linear-gradient(135deg, #00ADB5, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI</span>
         </div>
-        <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">
+        <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">
             Enterprise Trade Intelligence
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # DYNAMIC DARK MODE TOGGLE
+    # Dynamic Dark/Light Mode Switcher
     dark_mode = st.toggle("🌙 Dark Mode", value=True)
 
+    st.markdown("<p style='font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94A3B8; margin: 12px 0 6px 0;'>Navigation</p>", unsafe_allow_html=True)
+    
     app_mode = st.radio(
         "Navigation Menu",
         [
@@ -90,9 +94,9 @@ with st.sidebar:
         label_visibility="collapsed"
     )
 
-    st.markdown("---")
-    st.markdown("### 🎛️ Dynamic Market Filters")
-    
+    st.markdown("<hr style='margin: 16px 0; border: none; border-top: 1px solid rgba(255,255,255,0.08);' />", unsafe_allow_html=True)
+    st.markdown("<p style='font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94A3B8; margin-bottom: 8px;'>🎛️ Market Filters</p>", unsafe_allow_html=True)
+
     # Year Slider
     year_range = st.slider(
         "Chronological Horizon",
@@ -101,7 +105,7 @@ with st.sidebar:
         value=(2015, 2024),
         step=1
     )
-    
+
     # Commodities Multi-Select
     commodities_list = sorted(df_main["commodity_name"].unique())
     selected_commodities = st.multiselect(
@@ -109,7 +113,7 @@ with st.sidebar:
         options=commodities_list,
         default=commodities_list
     )
-    
+
     # Reporters Multi-Select
     reporters_list = sorted(df_main["reporter_country"].unique())
     selected_reporters = st.multiselect(
@@ -117,12 +121,12 @@ with st.sidebar:
         options=reporters_list,
         default=reporters_list
     )
-    
+
     st.markdown("""
-    <div style="margin-top: 24px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.72rem; color: #94A3B8;">
-        <b>Engine:</b> UN Comtrade v2.4<br/>
-        <b>HS Taxonomy:</b> 290121 - 290230<br/>
-        <b>ML Model:</b> GradientBoost (R²=0.954)
+    <div style="margin-top: 24px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; font-size: 0.72rem; color: #94A3B8; line-height: 1.5;">
+        <b style="color: #CBD5E1;">Data Engine:</b> UN Comtrade v2.4<br/>
+        <b style="color: #CBD5E1;">HS Taxonomy:</b> 290121–290230<br/>
+        <b style="color: #CBD5E1;">ML Engine:</b> GradientBoost (R²=0.954)
     </div>
     """, unsafe_allow_html=True)
 
@@ -131,287 +135,95 @@ with st.sidebar:
 # -----------------------------------------------------------------------------
 if dark_mode:
     bg_color = "#0B132B"
-    card_bg = "#16223F"
-    input_bg = "#1F2D4D"
-    border_color = "#2E3F66"
+    card_bg = "#112240"
+    card_hover = "#162D55"
+    border_color = "rgba(255, 255, 255, 0.09)"
     text_color = "#F8FAFC"
     subtext_color = "#94A3B8"
-    kpi_num_color = "#38BDF8"
-    btn_bg = "#1F2D4D"
-    btn_text = "#F8FAFC"
-    btn_border = "#00ADB5"
+    accent_color = "#00ADB5"
+    accent_cyan = "#38BDF8"
     plotly_template = "plotly_dark"
     grid_color = "rgba(255, 255, 255, 0.08)"
-    map_geo_bg = "#0B132B"
-    banner_bg = "linear-gradient(135deg, #0A192F 0%, #112240 50%, #1B3A4B 100%)"
+    line_color = "#334155"
+    banner_bg = "linear-gradient(135deg, #0A192F 0%, #112240 50%, #133B4D 100%)"
 else:
     bg_color = "#F8FAFC"
     card_bg = "#FFFFFF"
-    input_bg = "#F1F5F9"
-    border_color = "#CBD5E1"
+    card_hover = "#F1F5F9"
+    border_color = "#E2E8F0"
     text_color = "#0F172A"
     subtext_color = "#64748B"
-    kpi_num_color = "#0F172A"
-    btn_bg = "#FFFFFF"
-    btn_text = "#0F172A"
-    btn_border = "#CBD5E1"
+    accent_color = "#00838F"
+    accent_cyan = "#0284C7"
     plotly_template = "plotly_white"
-    grid_color = "rgba(0, 0, 0, 0.06)"
-    map_geo_bg = "#F8FAFC"
-    banner_bg = "linear-gradient(135deg, #1E293B 0%, #334155 50%, #1D7874 100%)"
+    grid_color = "rgba(15, 23, 42, 0.06)"
+    line_color = "#CBD5E1"
+    banner_bg = "linear-gradient(135deg, #1E293B 0%, #334155 50%, #1E4E5F 100%)"
 
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
     html, body, [class*="css"], .stApp {{
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: {bg_color} !important;
-        color: {text_color} !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: {bg_color};
+        color: {text_color};
     }}
 
-    /* 1. Eliminate the huge white top bar */
-    header[data-testid="stHeader"], .stAppHeader, div[data-testid="stToolbar"], [data-testid="stHeader"] {{
-        background-color: {bg_color} !important;
-        background: {bg_color} !important;
-        color: {text_color} !important;
+    /* Clean Streamlit Header */
+    header[data-testid="stHeader"] {{
+        background-color: transparent !important;
     }}
 
-    /* 2. Page Container */
-    .stApp, [data-testid="stAppViewContainer"], .main, section.main {{
-        background-color: {bg_color} !important;
+    /* Global Headings */
+    h1, h2, h3, h4, h5, h6 {{
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
         color: {text_color} !important;
+        letter-spacing: -0.3px;
     }}
 
-    /* 3. Global Headings & Labels */
-    h1, h2, h3, h4, h5, h6, label, [data-testid="stWidgetLabel"] p {{
-        color: {text_color} !important;
-    }}
-
-    /* 4. Streamlit Download & Standard Buttons */
-    .stButton > button, .stDownloadButton > button, div[data-testid="stDownloadButton"] > button {{
-        background-color: {btn_bg} !important;
-        color: {btn_text} !important;
-        border: 1px solid {btn_border} !important;
-        border-radius: 8px !important;
-        padding: 10px 20px !important;
-        font-weight: 600 !important;
-        transition: all 0.2s ease !important;
-        width: 100% !important;
-        text-align: left !important;
-    }}
-    .stButton > button:hover, .stDownloadButton > button:hover, div[data-testid="stDownloadButton"] > button:hover {{
-        background-color: #00ADB5 !important;
-        color: #FFFFFF !important;
-        border-color: #00ADB5 !important;
-        box-shadow: 0 4px 15px rgba(0, 173, 181, 0.35) !important;
-    }}
-    .stButton > button p, .stDownloadButton > button p {{
-        color: {btn_text} !important;
-        font-weight: 600 !important;
-    }}
-    .stButton > button:hover p, .stDownloadButton > button:hover p {{
-        color: #FFFFFF !important;
-    }}
-
-    /* 5. Streamlit Selectboxes, Inputs & Popovers */
-    div[data-baseweb="select"] > div {{
-        background-color: {input_bg} !important;
-        color: {text_color} !important;
-        border: 1px solid {border_color} !important;
-        border-radius: 8px !important;
-    }}
-    div[data-baseweb="select"] * {{
-        color: {text_color} !important;
-    }}
-    div[data-baseweb="popover"], ul[role="listbox"] {{
-        background-color: {card_bg} !important;
-        color: {text_color} !important;
-        border: 1px solid {border_color} !important;
-    }}
-    li[role="option"] {{
-        background-color: {card_bg} !important;
-        color: {text_color} !important;
-    }}
-    li[role="option"]:hover, li[aria-selected="true"] {{
-        background-color: #00ADB5 !important;
-        color: #FFFFFF !important;
-    }}
-
-    /* 6. Form Inputs & Number Inputs */
-    div[data-baseweb="input"] > div, input, textarea {{
-        background-color: {input_bg} !important;
-        color: {text_color} !important;
-        border: 1px solid {border_color} !important;
-        border-radius: 8px !important;
-    }}
-
-    /* 7. Sliders */
-    [data-testid="stSlider"] label, [data-testid="stSlider"] div, [data-testid="stSlider"] span {{
-        color: {text_color} !important;
-    }}
-
-    /* 8. DataFrames & Tables */
-    [data-testid="stDataFrame"] {{
-        background-color: {card_bg} !important;
-        border: 1px solid {border_color} !important;
-        border-radius: 10px !important;
-    }}
-
-    /* 9. Metrics & KPIs */
-    [data-testid="stMetricValue"] {{
-        color: {kpi_num_color} !important;
-        font-weight: 800 !important;
-    }}
-    [data-testid="stMetricLabel"] {{
-        color: {subtext_color} !important;
-        font-weight: 600 !important;
-    }}
-
-    /* 10. Expanders */
-    [data-testid="stExpander"] {{
-        background-color: {card_bg} !important;
-        border: 1px solid {border_color} !important;
-        border-radius: 12px !important;
-        margin-bottom: 12px !important;
-    }}
-    [data-testid="stExpander"] details {{
-        background-color: {card_bg} !important;
-    }}
-    [data-testid="stExpander"] summary {{
-        color: {text_color} !important;
-    }}
-    [data-testid="stExpander"] summary span, [data-testid="stExpander"] summary p {{
-        color: {text_color} !important;
-        font-weight: 700 !important;
-    }}
-
-    /* 11. General Main Canvas Text */
-    section.main p, section.main li {{
-        color: {text_color} !important;
-    }}
-    section.main strong, section.main b {{
-        color: {text_color} !important;
-    }}
-
-    /* Top Brand Banner */
-    .brand-container {{
-        background: {banner_bg};
-        border-radius: 16px;
-        padding: 24px 30px;
-        color: #FFFFFF;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        margin-bottom: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-    }}
-    .brand-title {{
-        font-size: 2.1rem;
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        color: #F8FAFC;
-        margin-bottom: 4px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }}
-    .brand-badge {{
-        background: linear-gradient(135deg, #00ADB5 0%, #007580 100%);
-        color: #FFFFFF;
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 20px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }}
-    .brand-subtitle {{
-        font-size: 0.92rem;
-        color: #CBD5E1;
-        font-weight: 400;
-    }}
-    .live-indicator {{
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(16, 185, 129, 0.15);
-        color: #10B981;
-        border: 1px solid rgba(16, 185, 129, 0.3);
-        padding: 6px 14px;
-        border-radius: 30px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        font-family: 'JetBrains Mono', monospace;
-    }}
-    .pulse-dot {{
-        width: 8px;
-        height: 8px;
-        background-color: #10B981;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #10B981;
-    }}
-
-    /* Executive KPI Cards */
-    .kpi-grid {{
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 14px;
-        margin-bottom: 22px;
-    }}
-    .kpi-box {{
+    /* Standardized Card Container */
+    .metric-card {{
         background: {card_bg};
-        border-radius: 14px;
-        padding: 18px 20px;
         border: 1px solid {border_color};
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 12px;
+        padding: 16px 20px;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
         position: relative;
         overflow: hidden;
     }}
-    .kpi-box:hover {{
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px -3px rgba(0, 173, 181, 0.15);
+    .metric-card:hover {{
+        border-color: {accent_color};
+        box-shadow: 0 8px 20px -4px rgba(0, 173, 181, 0.15);
     }}
-    .kpi-box::before {{
+    .metric-card::before {{
         content: "";
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #00ADB5, #3B82F6);
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: {accent_color};
     }}
-    .kpi-box.deficit::before {{
-        background: linear-gradient(90deg, #F43F5E, #FB7185);
-    }}
-    .kpi-box.emerald::before {{
-        background: linear-gradient(90deg, #10B981, #34D399);
-    }}
-    .kpi-box.amber::before {{
-        background: linear-gradient(90deg, #F59E0B, #FBBF24);
-    }}
-    .kpi-box.purple::before {{
-        background: linear-gradient(90deg, #8B5CF6, #A78BFA);
-    }}
-    .kpi-label {{
-        font-size: 0.74rem;
+    .metric-card.emerald::before {{ background: #10B981; }}
+    .metric-card.purple::before {{ background: #8B5CF6; }}
+    .metric-card.rose::before {{ background: #F43F5E; }}
+    .metric-card.amber::before {{ background: #F59E0B; }}
+
+    .metric-label {{
+        font-size: 0.72rem;
         font-weight: 700;
         color: {subtext_color};
         text-transform: uppercase;
         letter-spacing: 0.6px;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }}
-    .kpi-num {{
-        font-size: 1.85rem;
+    .metric-val {{
+        font-size: 1.75rem;
         font-weight: 800;
-        color: {kpi_num_color};
+        color: {text_color};
         letter-spacing: -0.5px;
         line-height: 1.1;
     }}
-    .kpi-footnote {{
+    .metric-sub {{
         font-size: 0.74rem;
         color: {subtext_color};
         margin-top: 6px;
@@ -420,84 +232,140 @@ st.markdown(f"""
         gap: 4px;
     }}
 
-    /* Content Card Container */
-    .content-card {{
-        background: {card_bg};
+    /* Unified Header */
+    .hero-banner {{
+        background: {banner_bg};
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 14px;
-        padding: 22px;
-        border: 1px solid {border_color};
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
+        padding: 22px 28px;
+        color: #FFFFFF;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
     }}
-    .content-header {{
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: {text_color};
-        margin-bottom: 14px;
+    .hero-title {{
+        font-size: 1.85rem;
+        font-weight: 800;
+        letter-spacing: -0.6px;
+        color: #F8FAFC;
         display: flex;
         align-items: center;
+        gap: 10px;
+    }}
+    .hero-badge {{
+        background: linear-gradient(135deg, #00ADB5 0%, #007580 100%);
+        color: #FFFFFF;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+    }}
+    .hero-sub {{
+        font-size: 0.88rem;
+        color: #CBD5E1;
+        margin-top: 3px;
+    }}
+    .live-chip {{
+        display: inline-flex;
+        align-items: center;
         gap: 8px;
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        padding: 6px 14px;
+        border-radius: 24px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
+    }}
+    .pulse-dot {{
+        width: 7px;
+        height: 7px;
+        background-color: #10B981;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #10B981;
     }}
 
-    /* Sidebar Styling */
+    /* Dataframe wrapper border */
+    [data-testid="stDataFrame"] {{
+        border: 1px solid {border_color} !important;
+        border-radius: 10px !important;
+        overflow: hidden;
+    }}
+
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] {{
+        gap: 8px;
+        border-bottom: 1px solid {border_color};
+    }}
+    .stTabs [data-baseweb="tab"] {{
+        padding: 8px 16px;
+        border-radius: 6px 6px 0 0;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }}
+
+    /* Sidebar Harmonization */
     section[data-testid="stSidebar"] {{
-        background-color: #0A1428 !important;
-        color: #E2E8F0 !important;
-    }}
-    section[data-testid="stSidebar"] .stMarkdown p, 
-    section[data-testid="stSidebar"] .stMarkdown h1, 
-    section[data-testid="stSidebar"] .stMarkdown h2, 
-    section[data-testid="stSidebar"] .stMarkdown h3 {{
-        color: #F8FAFC !important;
-    }}
-    section[data-testid="stSidebar"] .stRadio label {{
-        color: #CBD5E1 !important;
-        font-weight: 500;
-    }}
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {{
-        color: #F8FAFC !important;
-        font-weight: 600 !important;
+        background-color: {"#0A1428" if dark_mode else "#F1F5F9"} !important;
+        border-right: 1px solid {border_color};
     }}
 </style>
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
+# UNIFIED HEADER HELPER
+# -----------------------------------------------------------------------------
+def render_header(title, subtitle, badge="ENTERPRISE EDITION"):
+    st.markdown(f"""
+    <div class="hero-banner">
+        <div>
+            <div class="hero-title">
+                {title}
+                <span class="hero-badge">{badge}</span>
+            </div>
+            <div class="hero-sub">{subtitle}</div>
+        </div>
+        <div>
+            <div class="live-chip">
+                <span class="pulse-dot"></span>
+                COMMODITY FEED ACTIVE
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# -----------------------------------------------------------------------------
 # DATA FILTERING LOGIC
 # -----------------------------------------------------------------------------
+active_commodities = selected_commodities if selected_commodities else commodities_list
+active_reporters = selected_reporters if selected_reporters else reporters_list
+
 filtered_data = df_main[
     (df_main["refYear"] >= year_range[0]) &
     (df_main["refYear"] <= year_range[1]) &
-    (df_main["commodity_name"].isin(selected_commodities if selected_commodities else commodities_list)) &
-    (df_main["reporter_country"].isin(selected_reporters if selected_reporters else reporters_list))
+    (df_main["commodity_name"].isin(active_commodities)) &
+    (df_main["reporter_country"].isin(active_reporters))
 ].copy()
 
 # -----------------------------------------------------------------------------
-# MASTER PLOTLY STYLING ENGINE (AUTHENTIC DARK & LIGHT MODES)
+# MASTER PLOTLY STYLING ENGINE
 # -----------------------------------------------------------------------------
 def apply_plot_theme(fig, is_dark, height=None, title=None):
-    """
-    Applies publication-grade, high-contrast typography, axes, ticks, gridlines,
-    and legends tailored specifically for Dark Mode and Normal (Light) Mode.
-    Guarantees zero washed-out labels, faint gray text, or illegible graphics.
-    """
-    if is_dark:
-        font_color = "#F8FAFC"
-        axis_title_color = "#F8FAFC"
-        tick_color = "#CBD5E1"
-        grid_color = "rgba(255, 255, 255, 0.10)"
-        line_color = "#475569"
-        plotly_temp = "plotly_dark"
-    else:
-        font_color = "#0F172A"
-        axis_title_color = "#0F172A"
-        tick_color = "#1E293B"
-        grid_color = "rgba(15, 23, 42, 0.08)"
-        line_color = "#94A3B8"
-        plotly_temp = "plotly_white"
+    font_color = "#F8FAFC" if is_dark else "#0F172A"
+    tick_color = "#CBD5E1" if is_dark else "#334155"
+    p_grid = "rgba(255, 255, 255, 0.08)" if is_dark else "rgba(15, 23, 42, 0.06)"
+    p_line = "#334155" if is_dark else "#CBD5E1"
+    template = "plotly_dark" if is_dark else "plotly_white"
 
     layout_dict = dict(
-        template=plotly_temp,
+        template=template,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="Plus Jakarta Sans, sans-serif", size=12, color=font_color),
@@ -517,169 +385,221 @@ def apply_plot_theme(fig, is_dark, height=None, title=None):
         )
 
     fig.update_layout(**layout_dict)
-
     fig.update_xaxes(
-        title_font=dict(color=axis_title_color, size=12, family="Plus Jakarta Sans, sans-serif"),
-        tickfont=dict(color=tick_color, size=11, family="Plus Jakarta Sans, sans-serif"),
-        gridcolor=grid_color,
-        zerolinecolor=grid_color,
-        showgrid=True,
+        title_font=dict(color=font_color, size=12),
+        tickfont=dict(color=tick_color, size=11),
+        gridcolor=p_grid,
         showline=True,
-        linecolor=line_color,
+        linecolor=p_line,
         linewidth=1
     )
-
     fig.update_yaxes(
-        title_font=dict(color=axis_title_color, size=12, family="Plus Jakarta Sans, sans-serif"),
-        tickfont=dict(color=tick_color, size=11, family="Plus Jakarta Sans, sans-serif"),
-        gridcolor=grid_color,
-        zerolinecolor=grid_color,
-        showgrid=True,
+        title_font=dict(color=font_color, size=12),
+        tickfont=dict(color=tick_color, size=11),
+        gridcolor=p_grid,
         showline=True,
-        linecolor=line_color,
+        linecolor=p_line,
         linewidth=1
     )
-
     return fig
 
 # =============================================================================
 # MODULE 1: EXECUTIVE COMMAND CENTER
 # =============================================================================
 if app_mode == "⚡ Executive Dashboard":
-    st.markdown("""
-    <div class="brand-container">
-        <div>
-            <div class="brand-title">
-                PETROFLOW INTELLIGENCE™
-                <span class="brand-badge">CAPSTONE EDITION</span>
+    render_header(
+        "PETROFLOW INTELLIGENCE™",
+        "Global Petrochemical Trade Economics · 8 Primary Reporter Giants · 2015–2024 Horizon · UN Comtrade",
+        "EXECUTIVE OVERVIEW"
+    )
+
+    if filtered_data.empty:
+        st.warning("⚠️ No trade records match the current filter selection. Please broaden the filters in the sidebar.")
+    else:
+        # High-Precision Academic Metrics
+        total_trade = filtered_data["trade_value_usd"].sum()
+        total_imports = filtered_data[filtered_data["trade_flow"] == "Import"]["trade_value_usd"].sum()
+        total_exports = filtered_data[filtered_data["trade_flow"] == "Export"]["trade_value_usd"].sum()
+        trade_balance = total_exports - total_imports
+        total_volume_mt = filtered_data["trade_volume_mt"].sum()
+        record_count = len(filtered_data)
+        avg_unit_price = total_trade / total_volume_mt if total_volume_mt > 0 else 0
+
+        # High-Craft 6-Metric KPI Grid
+        kpi_cols = st.columns(6)
+        with kpi_cols[0]:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">Total Gross Trade</div>
+                <div class="metric-val">${total_trade/1e9:.2f}B</div>
+                <div class="metric-sub">🌐 Exports + Imports</div>
             </div>
-            <div class="brand-subtitle">
-                Global Petrochemical Trade Economics · 8 Primary Reporter Giants · 2015–2024 Horizon · UN Comtrade
+            """, unsafe_allow_html=True)
+        with kpi_cols[1]:
+            st.markdown(f"""
+            <div class="metric-card emerald">
+                <div class="metric-label">Physical Exports</div>
+                <div class="metric-val">${total_exports/1e9:.2f}B</div>
+                <div class="metric-sub">🚢 Outbound Clearance</div>
             </div>
-        </div>
-        <div>
-            <div class="live-indicator">
-                <span class="pulse-dot"></span>
-                LIVE COMMODITY ENGINE
+            """, unsafe_allow_html=True)
+        with kpi_cols[2]:
+            st.markdown(f"""
+            <div class="metric-card purple">
+                <div class="metric-label">Feedstock Imports</div>
+                <div class="metric-val">${total_imports/1e9:.2f}B</div>
+                <div class="metric-sub">📥 Inbound Intake</div>
             </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+        with kpi_cols[3]:
+            balance_color = "emerald" if trade_balance >= 0 else "rose"
+            balance_prefix = "+$" if trade_balance >= 0 else "-$"
+            st.markdown(f"""
+            <div class="metric-card {balance_color}">
+                <div class="metric-label">Net Trade Balance</div>
+                <div class="metric-val">{balance_prefix}{abs(trade_balance)/1e9:.2f}B</div>
+                <div class="metric-sub">⚖️ Net Solvency Position</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with kpi_cols[4]:
+            st.markdown(f"""
+            <div class="metric-card amber">
+                <div class="metric-label">Cargo Volume</div>
+                <div class="metric-val">{total_volume_mt/1e6:.2f} Mt</div>
+                <div class="metric-sub">📦 Million Metric Tons</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with kpi_cols[5]:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">Weighted TUV</div>
+                <div class="metric-val">${avg_unit_price:.1f}</div>
+                <div class="metric-sub">🏷️ Border USD / MT</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    # Core High-Precision Academic Metrics
-    total_trade = filtered_data["trade_value_usd"].sum()
-    total_imports = filtered_data[filtered_data["trade_flow"] == "Import"]["trade_value_usd"].sum()
-    total_exports = filtered_data[filtered_data["trade_flow"] == "Export"]["trade_value_usd"].sum()
-    trade_balance = total_exports - total_imports
-    total_volume_mt = filtered_data["trade_volume_mt"].sum()
-    record_count = len(filtered_data)
-    valid_volume_pct = (filtered_data["trade_volume_mt"] > 0).mean() * 100 if record_count > 0 else 0
+        st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
 
-    # Modern 6-Card KPI Grid
-    st.markdown(f"""
-    <div class="kpi-grid">
-        <div class="kpi-box">
-            <div class="kpi-label">TOTAL GROSS TRADE</div>
-            <div class="kpi-num">${total_trade/1e9:.2f}B</div>
-            <div class="kpi-footnote">🌐 Imports + Exports</div>
-        </div>
-        <div class="kpi-box emerald">
-            <div class="kpi-label">EXPORTS (OUTBOUND)</div>
-            <div class="kpi-num">${total_exports/1e9:.2f}B</div>
-            <div class="kpi-footnote">🚢 Physical Supply Clearance</div>
-        </div>
-        <div class="kpi-box purple">
-            <div class="kpi-label">IMPORTS (INBOUND)</div>
-            <div class="kpi-num">${total_imports/1e9:.2f}B</div>
-            <div class="kpi-footnote">📥 Feedstock Consumption</div>
-        </div>
-        <div class="kpi-box deficit">
-            <div class="kpi-label">NET TRADE BALANCE</div>
-            <div class="kpi-num">{"-$" if trade_balance < 0 else "$"}{abs(trade_balance)/1e9:.2f}B</div>
-            <div class="kpi-footnote">⚖️ Exports - Imports</div>
-        </div>
-        <div class="kpi-box amber">
-            <div class="kpi-label">PHYSICAL VOLUME</div>
-            <div class="kpi-num">{total_volume_mt/1e6:.2f} Mt</div>
-            <div class="kpi-footnote">📦 Million Metric Tons</div>
-        </div>
-        <div class="kpi-box">
-            <div class="kpi-label">DATA AUDIT</div>
-            <div class="kpi-num">{record_count}</div>
-            <div class="kpi-footnote">✅ {valid_volume_pct:.1f}% Usable Quantity</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        # Tabbed Layout for Visual Hierarchy
+        tab_macro, tab_countries, tab_insights = st.tabs(["📊 Macro Trade Dynamics", "🌐 Reporter Performance Scorecard", "🔬 Key Econometric Findings"])
 
-    # Main Visual Analytics Columns
-    col_chart1, col_chart2 = st.columns([1.15, 1])
+        with tab_macro:
+            col_chart1, col_chart2 = st.columns([1.15, 1])
+            with col_chart1:
+                annual_summary = filtered_data.groupby(["refYear", "trade_flow"])["trade_value_usd"].sum().reset_index()
+                fig_annual = px.bar(
+                    annual_summary,
+                    x="refYear",
+                    y="trade_value_usd",
+                    color="trade_flow",
+                    barmode="group",
+                    color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#0284C7"},
+                    labels={"trade_value_usd": "Trade Value (USD)", "refYear": "Year", "trade_flow": "Flow"}
+                )
+                apply_plot_theme(fig_annual, dark_mode, height=400, title="Annual Trade Velocity by Flow Direction (2015–2024)")
+                fig_annual.update_layout(
+                    yaxis=dict(tickformat="$.2s"),
+                    xaxis=dict(tickmode="linear", dtick=1),
+                    legend=dict(orientation="h", y=1.12, x=0.0)
+                )
+                st.plotly_chart(fig_annual, use_container_width=True)
 
-    with col_chart1:
-        st.markdown("<div class=\"content-header\">📊 Annual Trade Velocity (2015–2024)</div>", unsafe_allow_html=True)
-        annual_summary = filtered_data.groupby(["refYear", "trade_flow"])["trade_value_usd"].sum().reset_index()
-        
-        fig_annual = px.bar(
-            annual_summary,
-            x="refYear",
-            y="trade_value_usd",
-            color="trade_flow",
-            barmode="group",
-            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
-            labels={"trade_value_usd": "Trade Value (USD)", "refYear": "Year", "trade_flow": "Trade Direction"}
-        )
-        apply_plot_theme(fig_annual, dark_mode, height=390)
-        fig_annual.update_layout(
-            yaxis=dict(tickformat="$.2s"),
-            xaxis=dict(tickmode="linear", dtick=1),
-            legend=dict(orientation="h", y=1.18, x=0.0)
-        )
-        st.plotly_chart(fig_annual, use_container_width=True, theme=None)
+            with col_chart2:
+                prod_summary = filtered_data.groupby(["commodity_name", "trade_flow"])["trade_value_usd"].sum().reset_index()
+                flow_totals = filtered_data.groupby("trade_flow")["trade_value_usd"].sum()
+                prod_summary["share_pct"] = prod_summary.apply(
+                    lambda r: (r["trade_value_usd"] / flow_totals[r["trade_flow"]]) * 100 if flow_totals[r["trade_flow"]] > 0 else 0,
+                    axis=1
+                )
+                order = ["Toluene", "Propylene", "Ethylene", "Butadiene", "Benzene"]
+                prod_summary["commodity_order"] = pd.Categorical(prod_summary["commodity_name"], categories=order, ordered=True)
+                prod_summary = prod_summary.sort_values("commodity_order")
 
-    with col_chart2:
-        st.markdown("<div class=\"content-header\">⚗️ Product Portfolio Share of Trade (%)</div>", unsafe_allow_html=True)
-        prod_summary = filtered_data.groupby(["commodity_name", "trade_flow"])["trade_value_usd"].sum().reset_index()
-        flow_totals = filtered_data.groupby("trade_flow")["trade_value_usd"].sum()
-        
-        prod_summary["share_pct"] = prod_summary.apply(
-            lambda r: (r["trade_value_usd"] / flow_totals[r["trade_flow"]]) * 100 if flow_totals[r["trade_flow"]] > 0 else 0,
-            axis=1
-        )
-        
-        order = ["Toluene", "Propylene", "Ethylene", "Butadiene", "Benzene"]
-        prod_summary["commodity_order"] = pd.Categorical(prod_summary["commodity_name"], categories=order, ordered=True)
-        prod_summary = prod_summary.sort_values("commodity_order")
-        
-        fig_prod = px.bar(
-            prod_summary,
-            y="commodity_name",
-            x="share_pct",
-            color="trade_flow",
-            barmode="group",
-            orientation="h",
-            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
-            labels={"share_pct": "Share of Trade (%)", "commodity_name": "Commodity", "trade_flow": "Trade Direction"}
-        )
-        apply_plot_theme(fig_prod, dark_mode, height=390)
-        fig_prod.update_layout(
-            xaxis=dict(ticksuffix="%"),
-            legend=dict(orientation="h", y=1.18, x=0.0)
-        )
-        st.plotly_chart(fig_prod, use_container_width=True, theme=None)
+                fig_prod = px.bar(
+                    prod_summary,
+                    y="commodity_name",
+                    x="share_pct",
+                    color="trade_flow",
+                    barmode="group",
+                    orientation="h",
+                    color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#0284C7"},
+                    labels={"share_pct": "Share of Trade (%)", "commodity_name": "Commodity", "trade_flow": "Flow"}
+                )
+                apply_plot_theme(fig_prod, dark_mode, height=400, title="Feedstock Portfolio Share of Gross Trade (%)")
+                fig_prod.update_layout(
+                    xaxis=dict(ticksuffix="%"),
+                    legend=dict(orientation="h", y=1.12, x=0.0)
+                )
+                st.plotly_chart(fig_prod, use_container_width=True)
 
-    st.markdown("---")
-    st.markdown("""
-    ### 🔬 Academic Significance & Key Econometric Findings
-    * **Feedstock Cracking Dichotomy:** Light Olefins (*Ethylene & Propylene*) represent **51.2%** of global trade value, dominated by low-cost ethane cracking from Saudi Arabia and US Gulf Coast export terminals.
-    * **Aromatics & Cyclics:** Benzene and Toluene represent **41.4%** of trade value, with major structural refining flows out of South Korea and the Netherlands into China's heavy industrial synthesis corridors.
-    * **COVID-19 & Energy Crisis Shocks:** Statistically significant structural shifts occurred in 2020 (demand contraction) and 2022 (European gas crisis), driving unit clearing prices to historical peaks above $1,200/MT ($p = 1.42 \\times 10^{-6}$).
-    """)
+        with tab_countries:
+            st.markdown("##### 🏆 Sovereign Trade Balance & Volume Audit")
+            country_scorecard = filtered_data.groupby("reporter_country").agg(
+                Gross_Trade_USD=("trade_value_usd", "sum"),
+                Exports_USD=("trade_value_usd", lambda x: x[filtered_data.loc[x.index, "trade_flow"] == "Export"].sum()),
+                Imports_USD=("trade_value_usd", lambda x: x[filtered_data.loc[x.index, "trade_flow"] == "Import"].sum()),
+                Volume_MT=("trade_volume_mt", "sum"),
+                Transactions=("transaction_id", "count")
+            ).reset_index()
+            country_scorecard["Net_Balance_USD"] = country_scorecard["Exports_USD"] - country_scorecard["Imports_USD"]
+            country_scorecard["Volume_Mt"] = country_scorecard["Volume_MT"] / 1e6
+            country_scorecard = country_scorecard.sort_values("Gross_Trade_USD", ascending=False)
+
+            st.dataframe(
+                country_scorecard[[
+                    "reporter_country", "Gross_Trade_USD", "Exports_USD", "Imports_USD", "Net_Balance_USD", "Volume_Mt", "Transactions"
+                ]],
+                column_config={
+                    "reporter_country": st.column_config.TextColumn("Reporter Economy", width="medium"),
+                    "Gross_Trade_USD": st.column_config.NumberColumn("Gross Trade", format="$%.2f", help="Total trade turnover"),
+                    "Exports_USD": st.column_config.NumberColumn("Exports ($)", format="$%.2f"),
+                    "Imports_USD": st.column_config.NumberColumn("Imports ($)", format="$%.2f"),
+                    "Net_Balance_USD": st.column_config.NumberColumn("Net Balance ($)", format="$%.2f"),
+                    "Volume_Mt": st.column_config.ProgressColumn(
+                        "Physical Volume (Mt)",
+                        format="%.2f Mt",
+                        min_value=0,
+                        max_value=float(country_scorecard["Volume_Mt"].max()) if not country_scorecard.empty else 1.0
+                    ),
+                    "Transactions": st.column_config.NumberColumn("Records", format="%d")
+                },
+                use_container_width=True,
+                hide_index=True
+            )
+
+        with tab_insights:
+            st.markdown("""
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 10px;">
+                <div class="metric-card">
+                    <div style="font-weight: 700; color: #00ADB5; margin-bottom: 6px;">⚗️ Light Olefins Primacy (51.2% Share)</div>
+                    <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.5;">
+                        Ethylene and Propylene command the largest commercial trade volume, anchored by low-cost ethane cracking in the Gulf Coast (USA) and Jubail (Saudi Arabia).
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-weight: 700; color: #38BDF8; margin-bottom: 6px;">🔄 Aromatic Re-Routing (41.4% Share)</div>
+                    <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.5;">
+                        Benzene and Toluene exhibit dense bilateral refinery streams from South Korea and the Netherlands directly into China's downstream chemical complexes.
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-weight: 700; color: #10B981; margin-bottom: 6px;">⚡ Structural Supply Shocks</div>
+                    <p style="font-size: 0.82rem; color: #94A3B8; margin: 0; line-height: 1.5;">
+                        Econometric tests confirm distinct regime changes in 2020 (demand contraction) and 2022 (European natural gas crisis), driving unit clearing prices above $1,200/MT (p < 0.001).
+                    </p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
 # =============================================================================
 # MODULE 2: INTERACTIVE GLOBAL CHOROPLETH TRADE MAP
 # =============================================================================
 elif app_mode == "🌐 Global Trade Map & Flows":
-    st.markdown("# 🌐 Global Trade Map & Geographical Intensity")
-    st.markdown("Geospatial distribution of petrochemical commercial trade across reporter economies and bilateral partners.")
+    render_header(
+        "GLOBAL TRADE MAP & GEOGRAPHICAL INTENSITY",
+        "Geospatial distribution of petrochemical commercial trade across reporter economies and bilateral partners.",
+        "GEOSPATIAL INTELLIGENCE"
+    )
 
     map_data = filtered_data.groupby("reporter_country").agg(
         Total_Value_USD=("trade_value_usd", "sum"),
@@ -689,20 +609,52 @@ elif app_mode == "🌐 Global Trade Map & Flows":
         ISO=("reporter_iso", "first")
     ).reset_index()
     map_data["Net_Balance_USD"] = map_data["Export_Value_USD"] - map_data["Import_Value_USD"]
-    map_data["Value_Billions"] = (map_data["Total_Value_USD"] / 1e9).round(2)
-    map_data["Balance_Billions"] = (map_data["Net_Balance_USD"] / 1e9).round(2)
+    map_data["Net_Balance_B"] = (map_data["Net_Balance_USD"] / 1e9).round(2)
+    map_data["Total_Value_B"] = (map_data["Total_Value_USD"] / 1e9).round(2)
+    map_data["Exports_B"] = (map_data["Export_Value_USD"] / 1e9).round(2)
+    map_data["Imports_B"] = (map_data["Import_Value_USD"] / 1e9).round(2)
+    map_data["Volume_Mt"] = (map_data["Total_Volume_MT"] / 1e6).round(2)
+    map_data["Unit_Value_USD_MT"] = np.where(map_data["Total_Volume_MT"] > 0, (map_data["Total_Value_USD"] / map_data["Total_Volume_MT"]).round(1), 0)
+
+    # Interactive Metric Selector for Map
+    m_col1, m_col2 = st.columns([1.5, 1])
+    with m_col1:
+        map_metric = st.segmented_control(
+            "Select Map Metric:",
+            options=["Net Trade Balance ($B)", "Total Trade Value ($B)", "Export Value ($B)", "Import Value ($B)", "Physical Volume (Mt)", "Unit Price ($/MT)"],
+            default="Net Trade Balance ($B)"
+        )
+    with m_col2:
+        st.caption("ℹ️ Click any territory to inspect national trade flows and bilateral partner networks.")
+
+    metric_field_map = {
+        "Net Trade Balance ($B)": ("Net_Balance_B", "Net Balance ($B)", ["#F43F5E", "#38BDF8", "#10B981"] if dark_mode else ["#DC2626", "#E2E8F0", "#059669"], True),
+        "Total Trade Value ($B)": ("Total_Value_B", "Total Value ($B)", "Viridis" if dark_mode else "Blues", False),
+        "Export Value ($B)": ("Exports_B", "Exports ($B)", "Tealgrn" if dark_mode else "Teal", False),
+        "Import Value ($B)": ("Imports_B", "Imports ($B)", "Purples", False),
+        "Physical Volume (Mt)": ("Volume_Mt", "Physical Volume (Mt)", "Cividis", False),
+        "Unit Price ($/MT)": ("Unit_Value_USD_MT", "Unit Value ($/MT)", "Plasma", False)
+    }
+
+    chosen_field, chosen_label, chosen_scale, is_diverging = metric_field_map.get(map_metric, ("Net_Balance_B", "Net Balance ($B)", ["#F43F5E", "#38BDF8", "#10B981"], True))
 
     fig_map = px.choropleth(
         map_data,
         locations="ISO",
-        color="Balance_Billions",
+        color=chosen_field,
         hover_name="reporter_country",
-        hover_data={"Value_Billions": ":$,.2fB", "Balance_Billions": ":$,.2fB", "ISO": False},
-        color_continuous_scale=["#F43F5E", "#38BDF8", "#10B981"] if dark_mode else ["#DC2626", "#E2E8F0", "#059669"],
-        color_continuous_midpoint=0,
-        labels={"Balance_Billions": "Net Trade Balance ($B)"}
+        hover_data={
+            "Total_Value_B": ":$,.2fB",
+            "Net_Balance_B": ":$,.2fB",
+            "Volume_Mt": ":,.2f Mt",
+            "Unit_Value_USD_MT": ":$,.1f",
+            "ISO": False
+        },
+        color_continuous_scale=chosen_scale,
+        color_continuous_midpoint=0 if is_diverging else None,
+        labels={chosen_field: chosen_label}
     )
-    apply_plot_theme(fig_map, dark_mode, height=520, title="Global Petrochemical Net Trade Balance by Economy (USD Billions)")
+    apply_plot_theme(fig_map, dark_mode, height=540, title=f"Global Petrochemical Trade Distribution — {chosen_label}")
     fig_map.update_layout(
         geo=dict(
             showframe=False,
@@ -714,28 +666,36 @@ elif app_mode == "🌐 Global Trade Map & Flows":
             coastlinecolor="#475569" if dark_mode else "#94A3B8",
             countrycolor="#334155" if dark_mode else "#CBD5E1",
             bgcolor="rgba(0,0,0,0)",
-            projection_type="equirectangular"
+            projection_type="natural earth"
         ),
         margin=dict(l=0, r=0, t=50, b=0)
     )
-    st.plotly_chart(fig_map, use_container_width=True, theme=None)
+    st.plotly_chart(fig_map, use_container_width=True)
 
     st.subheader("Geographical Balance Scorecard")
-    st.dataframe(map_data[["reporter_country", "ISO", "Value_Billions", "Balance_Billions", "Total_Volume_MT"]].rename(
-        columns={
-            "reporter_country": "Country",
-            "Value_Billions": "Total Trade ($B)",
-            "Balance_Billions": "Net Balance ($B)",
-            "Total_Volume_MT": "Physical Volume (MT)"
-        }
-    ), use_container_width=True)
+    st.dataframe(
+        map_data[["reporter_country", "ISO", "Total_Value_USD", "Net_Balance_USD", "Total_Volume_MT", "Unit_Value_USD_MT"]],
+        column_config={
+            "reporter_country": st.column_config.TextColumn("Economy", width="medium"),
+            "ISO": st.column_config.TextColumn("ISO Alpha-3", width="small"),
+            "Total_Value_USD": st.column_config.NumberColumn("Total Trade", format="$%.2f"),
+            "Net_Balance_USD": st.column_config.NumberColumn("Net Balance", format="$%.2f"),
+            "Total_Volume_MT": st.column_config.NumberColumn("Volume (MT)", format="%d MT"),
+            "Unit_Value_USD_MT": st.column_config.NumberColumn("Unit Value", format="$%.1f / MT")
+        },
+        use_container_width=True,
+        hide_index=True
+    )
 
 # =============================================================================
 # MODULE 3: OLEFINS VS AROMATICS CRACKING MATRIX
 # =============================================================================
 elif app_mode == "🔬 Olefins vs Aromatics Matrix":
-    st.markdown("# 🔬 Chemical Family Matrix: Olefins vs. Aromatics")
-    st.markdown("Evaluating cracking yield dynamics, price volatility, and supply chain margins.")
+    render_header(
+        "CHEMICAL FAMILY MATRIX: OLEFINS VS. AROMATICS",
+        "Evaluating cracking yield dynamics, price volatility, and supply chain margins across aliphatics and cyclics.",
+        "CRACKING ECONOMICS"
+    )
 
     filtered_data["chemical_family"] = np.where(
         filtered_data["commodity_name"].isin(["Ethylene", "Propylene", "Butadiene"]),
@@ -745,7 +705,6 @@ elif app_mode == "🔬 Olefins vs Aromatics Matrix":
 
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown("<div class=\"content-header\">📊 Trade Value by Chemical Family</div>", unsafe_allow_html=True)
         family_sum = filtered_data.groupby(["chemical_family", "trade_flow"])["trade_value_usd"].sum().reset_index()
         fig_fam = px.bar(
             family_sum,
@@ -753,18 +712,17 @@ elif app_mode == "🔬 Olefins vs Aromatics Matrix":
             y="trade_value_usd",
             color="trade_flow",
             barmode="group",
-            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#1E3E62"},
-            labels={"trade_value_usd": "Value (USD)", "chemical_family": "Chemical Family", "trade_flow": "Trade Direction"}
+            color_discrete_map={"Export": "#00ADB5", "Import": "#F59E0B" if dark_mode else "#0284C7"},
+            labels={"trade_value_usd": "Value (USD)", "chemical_family": "Chemical Family", "trade_flow": "Flow"}
         )
-        apply_plot_theme(fig_fam, dark_mode, height=430)
+        apply_plot_theme(fig_fam, dark_mode, height=420, title="Commercial Trade Value by Chemical Family")
         fig_fam.update_layout(
             yaxis=dict(tickformat="$.2s"),
-            legend=dict(orientation="h", y=1.18, x=0.0)
+            legend=dict(orientation="h", y=1.12, x=0.0)
         )
-        st.plotly_chart(fig_fam, use_container_width=True, theme=None)
+        st.plotly_chart(fig_fam, use_container_width=True)
 
     with c2:
-        st.markdown("<div class=\"content-header\">📦 Benchmark Unit Price (USD/MT) Distribution</div>", unsafe_allow_html=True)
         fig_box = px.box(
             filtered_data.dropna(subset=["trade_unit_value_usd_mt"]),
             x="commodity_name",
@@ -774,25 +732,51 @@ elif app_mode == "🔬 Olefins vs Aromatics Matrix":
                 "Light Olefins (Aliphatics)": "#00ADB5" if dark_mode else "#0284C7",
                 "Aromatic Hydrocarbons (Cyclics)": "#F59E0B" if dark_mode else "#D97706"
             },
-            labels={"trade_unit_value_usd_mt": "Unit Price (USD/MT)", "commodity_name": "Commodity", "chemical_family": "Chemical Family"}
+            labels={"trade_unit_value_usd_mt": "Unit Price (USD/MT)", "commodity_name": "Commodity", "chemical_family": "Family"}
         )
-        apply_plot_theme(fig_box, dark_mode, height=430)
-        fig_box.update_layout(
-            legend=dict(orientation="h", y=1.18, x=0.0)
-        )
-        fig_box.update_traces(
-            boxmean=True,
-            marker=dict(size=4, opacity=0.8),
-            line=dict(width=1.6)
-        )
-        st.plotly_chart(fig_box, use_container_width=True, theme=None)
+        apply_plot_theme(fig_box, dark_mode, height=420, title="Benchmark Unit Price (USD/MT) Distribution")
+        fig_box.update_layout(legend=dict(orientation="h", y=1.12, x=0.0))
+        fig_box.update_traces(boxmean=True, marker=dict(size=4, opacity=0.8), line=dict(width=1.6))
+        st.plotly_chart(fig_box, use_container_width=True)
+
+    # Time-Series Spread Evolution
+    st.markdown("##### 📈 Historical Price Spread Trajectory (2015–2024)")
+    trend_spread = filtered_data.groupby(["refYear", "chemical_family"])["trade_unit_value_usd_mt"].mean().reset_index()
+    fig_spread = px.line(
+        trend_spread,
+        x="refYear",
+        y="trade_unit_value_usd_mt",
+        color="chemical_family",
+        markers=True,
+        color_discrete_map={
+            "Light Olefins (Aliphatics)": "#00ADB5",
+            "Aromatic Hydrocarbons (Cyclics)": "#F59E0B"
+        },
+        labels={"trade_unit_value_usd_mt": "Average Price (USD/MT)", "refYear": "Year", "chemical_family": "Chemical Family"}
+    )
+    apply_plot_theme(fig_spread, dark_mode, height=360, title="Annual Average Clearing Price: Olefins vs. Aromatics (USD/MT)")
+    fig_spread.update_layout(
+        yaxis=dict(tickprefix="$"),
+        xaxis=dict(tickmode="linear", dtick=1),
+        legend=dict(orientation="h", y=1.12, x=0.0)
+    )
+    st.plotly_chart(fig_spread, use_container_width=True)
 
 # =============================================================================
 # MODULE 4: BILATERAL CORRIDORS & SANKEY
 # =============================================================================
 elif app_mode == "🗺️ Bilateral Corridors & Sankey":
-    st.markdown("# 🗺️ Bilateral Supply Chain Corridors")
-    st.markdown("Trace physical petrochemical cargo shipments from originating exporters to consuming destination partners.")
+    render_header(
+        "BILATERAL SUPPLY CHAIN CORRIDORS & SANKEY",
+        "Trace physical petrochemical cargo shipments from originating exporters to consuming destination partners.",
+        "SUPPLY CHAIN LOGISTICS"
+    )
+
+    sank_ctrl1, sank_ctrl2 = st.columns([1, 1.5])
+    with sank_ctrl1:
+        top_n = st.slider("Corridor Density (Top N Routes)", min_value=5, max_value=25, value=15, step=5)
+    with sank_ctrl2:
+        st.caption("ℹ️ Origin exporters are assigned unique chromatic signatures; links carry the source's color gradient.")
 
     corridors = filtered_data[filtered_data["trade_flow"] == "Export"].groupby(
         ["reporter_country", "partner_country"]
@@ -802,114 +786,335 @@ elif app_mode == "🗺️ Bilateral Corridors & Sankey":
         Transactions=("transaction_id", "count")
     ).reset_index().sort_values("Total_Value_B", ascending=False)
 
-    top_corridors = corridors.head(15)
+    top_corridors = corridors.head(top_n)
 
+    all_exporters = sorted(top_corridors["reporter_country"].unique())
+    all_importers = sorted(top_corridors["partner_country"].unique())
     all_nodes = list(pd.concat([top_corridors["reporter_country"], top_corridors["partner_country"]]).unique())
     node_map = {name: i for i, name in enumerate(all_nodes)}
+
+    # Distinct chromatic palette for exporters
+    palette = ["#10B981", "#00ADB5", "#38BDF8", "#F59E0B", "#8B5CF6", "#EC4899", "#3B82F6", "#14B8A6"]
+    exporter_colors = {exp: palette[i % len(palette)] for i, exp in enumerate(all_exporters)}
+
+    node_colors = []
+    for node in all_nodes:
+        if node in exporter_colors:
+            node_colors.append(exporter_colors[node])
+        else:
+            node_colors.append("#94A3B8" if dark_mode else "#64748B")
 
     sources = [node_map[r] for r in top_corridors["reporter_country"]]
     targets = [node_map[p] for p in top_corridors["partner_country"]]
     values = top_corridors["Total_Value_B"].tolist()
 
-    sankey_node_color = "#38BDF8" if dark_mode else "#0284C7"
-    sankey_link_color = "rgba(56, 189, 248, 0.4)" if dark_mode else "rgba(2, 132, 199, 0.35)"
+    # Derived link colors from origin exporter
+    link_colors = []
+    for r in top_corridors["reporter_country"]:
+        hex_c = exporter_colors.get(r, "#38BDF8").lstrip("#")
+        rgb = tuple(int(hex_c[i:i+2], 16) for i in (0, 2, 4))
+        link_colors.append(f"rgba({rgb[0]}, {rgb[1]}, {rgb[2]}, 0.35)")
 
     fig_sankey = go.Figure(data=[go.Sankey(
         node=dict(
-            pad=15,
-            thickness=20,
-            line=dict(color="#F8FAFC" if dark_mode else "#0F172A", width=1.0),
+            pad=18,
+            thickness=22,
+            line=dict(color="#F8FAFC" if dark_mode else "#0F172A", width=0.8),
             label=all_nodes,
-            color=sankey_node_color
+            color=node_colors
         ),
         link=dict(
             source=sources,
             target=targets,
             value=values,
-            color=sankey_link_color
+            color=link_colors
         )
     )])
-    apply_plot_theme(fig_sankey, dark_mode, height=520, title="Top Global Petrochemical Trade Corridors (Billion USD)")
-    st.plotly_chart(fig_sankey, use_container_width=True, theme=None)
+    apply_plot_theme(fig_sankey, dark_mode, height=540, title=f"Top {top_n} Global Petrochemical Supply Chain Corridors (Billion USD)")
+    st.plotly_chart(fig_sankey, use_container_width=True)
 
     st.subheader("Top Bilateral Trade Routes Table")
-    st.dataframe(top_corridors.rename(columns={
-        "reporter_country": "Origin Exporter",
-        "partner_country": "Destination Importer",
-        "Total_Value_B": "Total Value ($B)",
-        "Total_Volume_Mt": "Volume (Mt)",
-        "Transactions": "Shipments"
-    }), use_container_width=True)
+    st.dataframe(
+        top_corridors.rename(columns={
+            "reporter_country": "Origin Exporter",
+            "partner_country": "Destination Importer",
+            "Total_Value_B": "Total Value ($B)",
+            "Total_Volume_Mt": "Volume (Mt)",
+            "Transactions": "Shipments"
+        }),
+        column_config={
+            "Total Value ($B)": st.column_config.NumberColumn(format="$%.2f B"),
+            "Volume (Mt)": st.column_config.NumberColumn(format="%.2f Mt"),
+            "Shipments": st.column_config.NumberColumn(format="%d")
+        },
+        use_container_width=True,
+        hide_index=True
+    )
 
 # =============================================================================
 # MODULE 5: ECONOMETRIC HYPOTHESIS LAB
 # =============================================================================
 elif app_mode == "⚖️ Econometric Hypothesis Lab":
-    st.markdown("# ⚖️ Statistical Inference & Econometric Testing Lab")
-    st.markdown("Rigorous academic hypothesis testing satisfying curriculum requirements in statistical inference.")
+    render_header(
+        "STATISTICAL INFERENCE & ECONOMETRIC TESTING LAB",
+        "Rigorous academic hypothesis testing satisfying curriculum standards in empirical econometric inference.",
+        "ACADEMIC LAB"
+    )
 
-    if os.path.exists("submission_files/04_Statistical_Hypothesis_Testing_Results.csv"):
-        hyp_df = pd.read_csv("submission_files/04_Statistical_Hypothesis_Testing_Results.csv")
-        
-        for _, r in hyp_df.iterrows():
-            with st.expander(f"📌 {r['Test_ID']}: {r['Test_Name']} — {r['Decision']}", expanded=True):
-                c_a, c_b = st.columns([1.2, 1])
-                with c_a:
-                    st.markdown(f"**Null Hypothesis ($H_0$):** {r['Null_Hypothesis_H0']}")
-                    st.markdown(f"**Alternative ($H_1$):** {r['Alternative_H1']}")
-                    st.markdown(f"**Economic Interpretation:** {r['Economic_Interpretation']}")
-                with c_b:
-                    st.metric("Test Statistic", r["Test_Statistic"])
-                    st.metric("P-Value", r["P_Value"], delta="Statistically Significant" if "Reject" in r["Decision"] else "Insignificant")
+    hyp_file = "submission_files/04_Statistical_Hypothesis_Testing_Results.csv"
+    if os.path.exists(hyp_file):
+        hyp_df = pd.read_csv(hyp_file)
+
+        # Tabbed visual exploration
+        tab_cards, tab_t_test, tab_anova = st.tabs(["📋 Formal Test Matrix", "📉 Welch's T-Test Distribution Curve", "🎻 ANOVA Price Dispersion"])
+
+        with tab_cards:
+            for _, r in hyp_df.iterrows():
+                is_rejected = "Reject" in str(r["Decision"])
+                badge_color = "#10B981" if is_rejected else "#F59E0B"
+                badge_text = "REJECT H₀ (SIGNIFICANT)" if is_rejected else "FAIL TO REJECT H₀"
+
+                with st.expander(f"📌 {r['Test_ID']}: {r['Test_Name']} — {badge_text}", expanded=True):
+                    c_a, c_b = st.columns([1.3, 1])
+                    with c_a:
+                        st.markdown(f"**Null Hypothesis ($H_0$):** `{r['Null_Hypothesis_H0']}`")
+                        st.markdown(f"**Alternative ($H_1$):** `{r['Alternative_H1']}`")
+                        st.markdown(f"**Economic Interpretation:** {r['Economic_Interpretation']}")
+                    with c_b:
+                        m_col1, m_col2 = st.columns(2)
+                        m_col1.metric("Test Statistic", f"{float(r['Test_Statistic']):.4f}")
+                        m_col2.metric("P-Value", f"{float(r['P_Value']):.2e}" if float(r['P_Value']) < 0.001 else f"{float(r['P_Value']):.4f}")
+                        st.markdown(f"""
+                        <div style="padding: 8px 12px; background: {badge_color}22; border: 1px solid {badge_color}; border-radius: 6px; font-size: 0.76rem; font-weight: 700; color: {badge_color}; text-align: center; margin-top: 8px;">
+                            Decision: {r['Decision']} (α = {r['Significance_Alpha']})
+                        </div>
+                        """, unsafe_allow_html=True)
+
+        with tab_t_test:
+            st.markdown("##### 📉 Empirical Student's t-Distribution (Welch's Two-Sample Test)")
+            st.caption("Testing structural price shock: Pre-2020 vs Post-2020 unit border clearing prices.")
+
+            x_vals = np.linspace(-6, 6, 400)
+            y_vals = stats.t.pdf(x_vals, df=450)
+
+            fig_t = go.Figure()
+            # Distribution Curve
+            fig_t.add_trace(go.Scatter(x=x_vals, y=y_vals, mode="lines", name="Null Distribution (df=450)", line=dict(color="#38BDF8", width=2)))
+
+            # Critical regions (|t| > 1.96)
+            crit = 1.96
+            x_crit_left = np.linspace(-6, -crit, 100)
+            y_crit_left = stats.t.pdf(x_crit_left, df=450)
+            fig_t.add_trace(go.Scatter(x=x_crit_left, y=y_crit_left, fill="tozeroy", fillcolor="rgba(244, 63, 94, 0.4)", line=dict(color="rgba(244, 63, 94, 0.8)"), name="Rejection Region (α=0.05)"))
+
+            x_crit_right = np.linspace(crit, 6, 100)
+            y_crit_right = stats.t.pdf(x_crit_right, df=450)
+            fig_t.add_trace(go.Scatter(x=x_crit_right, y=y_crit_right, fill="tozeroy", fillcolor="rgba(244, 63, 94, 0.4)", line=dict(color="rgba(244, 63, 94, 0.8)"), showlegend=False))
+
+            # Observed Test Statistic
+            t_obs = -4.8603
+            fig_t.add_vline(x=t_obs, line_dash="dash", line_color="#10B981", line_width=2.5, annotation_text=f"Observed t = {t_obs}", annotation_position="top left", annotation_font_color="#10B981")
+
+            apply_plot_theme(fig_t, dark_mode, height=380, title="Student's t-Distribution & Rejection Zone (t_crit = ±1.96)")
+            st.plotly_chart(fig_t, use_container_width=True)
+
+        with tab_anova:
+            st.markdown("##### 🎻 Commodity Price Dispersion (One-Way ANOVA Verification)")
+            st.caption("Visually proving why mean prices differ significantly across basic petrochemical building blocks (F = 11.78, p = 2.70e-9).")
+            fig_violin = px.violin(
+                filtered_data.dropna(subset=["trade_unit_value_usd_mt"]),
+                x="commodity_name",
+                y="trade_unit_value_usd_mt",
+                color="commodity_name",
+                box=True,
+                points="outliers",
+                labels={"trade_unit_value_usd_mt": "Unit Value ($/MT)", "commodity_name": "Commodity"}
+            )
+            apply_plot_theme(fig_violin, dark_mode, height=400, title="Unit Price Dispersion by Commodity ($/MT)")
+            fig_violin.update_layout(showlegend=False)
+            st.plotly_chart(fig_violin, use_container_width=True)
+
     else:
-        st.warning("Hypothesis testing results file not found.")
+        st.warning("⚠️ Hypothesis testing results file not found at `submission_files/04_Statistical_Hypothesis_Testing_Results.csv`.")
 
 # =============================================================================
 # MODULE 6: PREDICTIVE AI & STRESS SIMULATOR
 # =============================================================================
 elif app_mode == "🤖 Predictive AI & Stress Simulator":
-    st.markdown("# 🤖 Predictive AI & Market Stress-Testing Simulator")
-    st.markdown("Interactive What-If forecasting engine powered by Gradient Boosting ($R^2 = 0.9543$).")
+    render_header(
+        "PREDICTIVE AI & MARKET STRESS-TESTING SIMULATOR",
+        "Interactive What-If forecasting engine powered by Gradient Boosting Regressor (R² = 0.9543).",
+        "MACHINE LEARNING INFERENCE"
+    )
 
-    sim_c1, sim_c2, sim_c3 = st.columns(3)
-    with sim_c1:
-        s_comm = st.selectbox("Commodity", commodities_list)
-        s_rep = st.selectbox("Origin Country", reporters_list)
-    with sim_c2:
-        s_part = st.selectbox("Partner Destination", [c for c in reporters_list if c != s_rep])
-        s_flow = st.selectbox("Flow Type", ["Export", "Import"])
-    with sim_c3:
-        s_vol = st.slider("Cargo Volume (MT)", 10000, 1000000, 350000, step=25000)
-        s_oil = st.slider("Simulated Brent Crude Oil ($/bbl)", 40.0, 140.0, 82.0, step=5.0)
+    with st.container(border=True):
+        st.markdown("##### 🎛️ Scenario Simulation Parameters")
+        sim_c1, sim_c2, sim_c3 = st.columns(3)
+        with sim_c1:
+            s_comm = st.selectbox("Commodity", commodities_list)
+            s_rep = st.selectbox("Origin Country", reporters_list)
+        with sim_c2:
+            partner_options = [c for c in reporters_list if c != s_rep]
+            s_part = st.selectbox("Partner Destination", partner_options if partner_options else reporters_list)
+            s_flow = st.selectbox("Flow Type", ["Export", "Import"])
+        with sim_c3:
+            s_vol = st.slider("Cargo Volume (MT)", 10000, 1000000, 350000, step=25000)
+            s_oil = st.slider("Simulated Brent Crude Oil ($/bbl)", 40.0, 140.0, 82.0, step=5.0)
 
-    if st.button("🔮 Run Live Predictive Inference", type="primary"):
-        if model_gb is not None:
-            input_df = pd.DataFrame([{
+    if model_gb is not None:
+        input_df = pd.DataFrame([{
+            "commodity_name": s_comm,
+            "reporter_country": s_rep,
+            "partner_country": s_part,
+            "trade_flow": s_flow,
+            "refYear": 2025,
+            "quarter": 3,
+            "crude_oil_proxy": s_oil,
+            "trade_volume_mt": s_vol
+        }])
+        pred_val = model_gb.predict(input_df)[0]
+        pred_tuv = pred_val / s_vol
+
+        # Historical benchmark comparison for this route & commodity
+        hist_match = df_main[
+            (df_main["commodity_name"] == s_comm) &
+            (df_main["trade_flow"] == s_flow)
+        ]
+        hist_avg_tuv = hist_match["trade_unit_value_usd_mt"].mean() if not hist_match.empty else 850.0
+        delta_pct = ((pred_tuv - hist_avg_tuv) / hist_avg_tuv) * 100
+
+        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        res_cols = st.columns(3)
+        with res_cols[0]:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">Forecasted Trade Value</div>
+                <div class="metric-val">${pred_val/1e6:.2f}M</div>
+                <div class="metric-sub">Commercial Gross Clearance</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with res_cols[1]:
+            st.markdown(f"""
+            <div class="metric-card emerald">
+                <div class="metric-label">Implied Unit Value (TUV)</div>
+                <div class="metric-val">${pred_tuv:.2f} <span style="font-size: 1rem; color: #94A3B8;">/ MT</span></div>
+                <div class="metric-sub">Border Clearing Price</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with res_cols[2]:
+            delta_color = "emerald" if delta_pct >= 0 else "rose"
+            delta_sign = "+" if delta_pct >= 0 else ""
+            st.markdown(f"""
+            <div class="metric-card {delta_color}">
+                <div class="metric-label">Baseline Comparison</div>
+                <div class="metric-val">{delta_sign}{delta_pct:.1f}%</div>
+                <div class="metric-sub">vs. Historical Mean (${hist_avg_tuv:.1f}/MT)</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Real-Time Crude Oil Sensitivity Curve
+        st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
+        st.markdown("##### ⚡ Live Brent Crude Oil Shock Sensitivity Curve ($40 — $140 / bbl)")
+        
+        oil_range = np.linspace(40, 140, 21)
+        sens_records = []
+        for o in oil_range:
+            sens_records.append({
                 "commodity_name": s_comm,
                 "reporter_country": s_rep,
                 "partner_country": s_part,
                 "trade_flow": s_flow,
                 "refYear": 2025,
                 "quarter": 3,
-                "crude_oil_proxy": s_oil,
+                "crude_oil_proxy": o,
                 "trade_volume_mt": s_vol
-            }])
-            pred_val = model_gb.predict(input_df)[0]
-            pred_tuv = pred_val / s_vol
-            
-            res_col1, res_col2 = st.columns(2)
-            res_col1.metric("Forecasted Gross Trade Value", f"${pred_val/1e6:.2f} Million", help="Total commercial clearing value")
-            res_col2.metric("Implied Trade Unit Value (TUV)", f"${pred_tuv:.2f} / MT", help="Border clearing price per metric ton")
-            st.success("✅ Inference completed via Gradient Boosting Regressor (Trained with 10-year rolling autocorrelations).")
-        else:
-            st.error("Trained model pipeline not found.")
+            })
+        sens_df = pd.DataFrame(sens_records)
+        sens_preds = model_gb.predict(sens_df)
+        sens_tuvs = sens_preds / s_vol
+
+        fig_sens = go.Figure()
+        fig_sens.add_trace(go.Scatter(
+            x=oil_range,
+            y=sens_tuvs,
+            mode="lines+markers",
+            name="Forecasted TUV ($/MT)",
+            line=dict(color="#00ADB5", width=2.5),
+            marker=dict(size=6, color="#00ADB5")
+        ))
+        # Marker for current user selection
+        fig_sens.add_trace(go.Scatter(
+            x=[s_oil],
+            y=[pred_tuv],
+            mode="markers",
+            name="Selected Scenario",
+            marker=dict(size=14, color="#F59E0B", symbol="diamond", line=dict(color="#FFFFFF", width=2))
+        ))
+        # Historical benchmark line
+        fig_sens.add_hline(
+            y=hist_avg_tuv,
+            line_dash="dot",
+            line_color="#94A3B8",
+            annotation_text=f"Historical Baseline (${hist_avg_tuv:.1f}/MT)",
+            annotation_position="bottom right"
+        )
+        apply_plot_theme(fig_sens, dark_mode, height=380, title=f"Feedstock Price Elasticity: {s_comm} Price ($/MT) vs. Brent Crude ($/bbl)")
+        fig_sens.update_xaxes(title_text="Brent Crude Oil ($/bbl)", tickprefix="$")
+        fig_sens.update_yaxes(title_text="Border Unit Price ($/MT)", tickprefix="$")
+        st.plotly_chart(fig_sens, use_container_width=True)
+
+    else:
+        st.error("⚠️ Trained model pipeline not found at `outputs/models/best_petrochemical_model.pkl`.")
 
 # =============================================================================
 # MODULE 7: SQL ANALYTICS TERMINAL
 # =============================================================================
 elif app_mode == "💾 SQL Analytics Terminal":
-    st.markdown("# 💾 Enterprise SQL Analytics Terminal")
-    st.markdown("Execute production SQL queries against the local SQLite Star Schema database (`database/petrochemical_trade.db`).")
+    render_header(
+        "ENTERPRISE SQL ANALYTICS TERMINAL",
+        "Execute production SQL queries against the local SQLite Star Schema database (`database/petrochemical_trade.db`).",
+        "QUERY ENGINE"
+    )
+
+    with st.expander("📚 Star Schema Architecture & Table Reference", expanded=False):
+        sch_col1, sch_col2, sch_col3, sch_col4 = st.columns(4)
+        with sch_col1:
+            st.markdown("""
+            **Fact_TradeTransactions**
+            - `transaction_id` (PK)
+            - `date_id` (FK)
+            - `commodity_id` (FK)
+            - `reporter_country_id` (FK)
+            - `partner_country_id` (FK)
+            - `trade_flow`
+            - `trade_volume_mt`
+            - `trade_value_usd`
+            - `trade_unit_value_usd_mt`
+            """)
+        with sch_col2:
+            st.markdown("""
+            **Dim_Country**
+            - `country_id` (PK)
+            - `country_name`
+            - `iso_code`
+            - `region`
+            """)
+        with sch_col3:
+            st.markdown("""
+            **Dim_Commodity**
+            - `commodity_id` (PK)
+            - `commodity_name`
+            - `hs_code`
+            - `chemical_family`
+            """)
+        with sch_col4:
+            st.markdown("""
+            **Dim_Date**
+            - `date_id` (PK)
+            - `year`
+            - `month`
+            - `quarter`
+            """)
 
     queries_preset = {
         "1. National Net Balance & Solvency Coverage": """
@@ -942,20 +1147,38 @@ SELECT year, commodity_name, Export_Billions
 FROM RankedExports
 WHERE rnk = 1
 ORDER BY year;
+""",
+        "3. High-Value Bilateral Trade Corridors (> $1 Billion)": """
+SELECT 
+    rep.country_name AS Origin_Exporter,
+    part.country_name AS Destination_Importer,
+    c.commodity_name,
+    ROUND(SUM(f.trade_value_usd) / 1e9, 2) AS Total_Value_Billions,
+    ROUND(SUM(f.trade_volume_mt) / 1e6, 2) AS Total_Volume_Million_MT
+FROM Fact_TradeTransactions f
+JOIN Dim_Country rep ON f.reporter_country_id = rep.country_id
+JOIN Dim_Country part ON f.partner_country_id = part.country_id
+JOIN Dim_Commodity c ON f.commodity_id = c.commodity_id
+WHERE f.trade_flow = 'Export'
+GROUP BY rep.country_name, part.country_name, c.commodity_name
+HAVING Total_Value_Billions >= 1.0
+ORDER BY Total_Value_Billions DESC;
 """
     }
 
-    q_choice = st.selectbox("Select Query Template:", list(queries_preset.keys()))
-    sql_text = st.text_area("SQL Statement", value=queries_preset[q_choice], height=160)
+    q_choice = st.selectbox("Select Analytical Query Template:", list(queries_preset.keys()))
+    sql_text = st.text_area("SQL Statement (SQLite Engine)", value=queries_preset[q_choice], height=160)
 
     if st.button("▶️ Execute Statement", type="primary"):
         db_path = "database/petrochemical_trade.db"
         if os.path.exists(db_path):
             conn = sqlite3.connect(db_path)
             try:
+                t0 = time.time()
                 res_df = pd.read_sql_query(sql_text, conn)
+                latency = time.time() - t0
                 st.dataframe(res_df, use_container_width=True)
-                st.success(f"Returned {len(res_df)} rows in 0.004s.")
+                st.caption(f"⚡ Query executed successfully: **{len(res_df)} rows** returned in **{latency*1000:.1f} ms**.")
             except Exception as e:
                 st.error(f"SQL Execution Error: {e}")
             finally:
@@ -965,8 +1188,11 @@ ORDER BY year;
 # MODULE 8: LMS SUBMISSION DELIVERABLES
 # =============================================================================
 elif app_mode == "📑 LMS Submission Deliverables":
-    st.markdown("# 📑 College LMS Submission Deliverables Hub")
-    st.markdown("Direct access to pre-compiled, publication-ready submission files fitting the LMS portal requirements (Max 16 MB).")
+    render_header(
+        "COLLEGE LMS SUBMISSION DELIVERABLES HUB",
+        "Direct access to pre-compiled, publication-ready academic submission files complying with portal guidelines.",
+        "ACADEMIC DELIVERABLES"
+    )
 
     sub_dir = "submission_files"
     if os.path.exists(sub_dir):
@@ -975,38 +1201,40 @@ elif app_mode == "📑 LMS Submission Deliverables":
         for i, f in enumerate(files):
             fp = os.path.join(sub_dir, f)
             size_kb = os.path.getsize(fp) / 1024
-            
-            c_icon = "📄"
-            doc_type = "Verified Data Output"
+
             if f.endswith(".pdf"):
-                c_icon = "📕"
-                doc_type = "Academic Report (PDF)" if "Report" in f else "Power BI DAX Guide (PDF)"
+                c_icon, doc_type, color_chip = "📕", "Academic Report (PDF)" if "Report" in f else "Power BI DAX Guide (PDF)", "#EF4444"
             elif f.endswith(".xlsx"):
-                c_icon = "📗"
-                doc_type = "Executive Financial Model (Excel)"
+                c_icon, doc_type, color_chip = "📗", "Executive Financial Model (Excel)", "#10B981"
             elif f.endswith(".docx"):
-                c_icon = "📘"
-                doc_type = "Academic Capstone Report (Word)"
+                c_icon, doc_type, color_chip = "📘", "Academic Capstone Report (Word)", "#3B82F6"
             elif f.endswith(".csv"):
-                c_icon = "📊"
-                doc_type = "CSV Tabular Dataset"
-            
+                c_icon, doc_type, color_chip = "📊", "Tabular Dataset (CSV)", "#F59E0B"
+            else:
+                c_icon, doc_type, color_chip = "📄", "Data Artifact", "#6B7280"
+
             with deliv_cols[i % 2]:
-                st.markdown(f"""
-                <div class="content-card" style="margin-bottom: 8px; padding: 14px 18px;">
-                    <div style="font-size: 0.72rem; color: #00ADB5; font-weight: 700; text-transform: uppercase;">
+                with st.container(border=True):
+                    st.markdown(f"""
+                    <div style="font-size: 0.72rem; color: {color_chip}; font-weight: 700; text-transform: uppercase;">
                         {c_icon} {doc_type} · {size_kb:.1f} KB
                     </div>
-                    <div style="font-size: 0.95rem; font-weight: 700; color: {text_color}; margin: 3px 0 8px 0; word-break: break-all;">
+                    <div style="font-size: 0.95rem; font-weight: 700; color: {text_color}; margin: 4px 0 10px 0; word-break: break-all;">
                         {f}
                     </div>
-                </div>
-                """, unsafe_allow_html=True)
-                with open(fp, "rb") as file_bytes:
-                    st.download_button(
-                        label=f"⬇️ Download {f}",
-                        data=file_bytes,
-                        file_name=f,
-                        mime="application/octet-stream",
-                        key=f"dl_{f}"
-                    )
+                    """, unsafe_allow_html=True)
+
+                    with open(fp, "rb") as file_bytes:
+                        st.download_button(
+                            label=f"⬇️ Download {f}",
+                            data=file_bytes,
+                            file_name=f,
+                            mime="application/octet-stream",
+                            key=f"dl_{f}"
+                        )
+
+                    # Quick Preview for CSV files
+                    if f.endswith(".csv"):
+                        with st.expander("👁️ Quick Data Sample"):
+                            sample_df = pd.read_csv(fp, nrows=5)
+                            st.dataframe(sample_df, use_container_width=True)
