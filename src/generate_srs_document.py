@@ -59,15 +59,14 @@ def generate_srs_docx(output_path):
     r3.font.color.rgb = RGBColor(71, 85, 105)
 
     # Metadata Table
-    info_table = doc.add_table(rows=6, cols=2)
+    info_table = doc.add_table(rows=5, cols=2)
     info_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     meta = [
         ("Project Title:", "Petrochemical Trade Analytics & Predictive Intelligence"),
         ("Document Classification:", "Software Requirements Specification (SRS) - Academic Capstone"),
         ("Compliance Standard:", "IEEE Std 830-1998 Recommended Practice for SRS"),
-        ("Candidate Name & ID:", "[Student Full Name] | ID: [Student Roll / LMS ID]"),
-        ("Evaluation Body:", "HCL Career Shaper COE & NASSCOM FutureSkills Prime"),
-        ("Release Version & Date:", "Version 1.0 (Production Release) | 1st November 2026")
+        ("Candidate Name:", "Anshu Kumar"),
+        ("Evaluation Body:", "HCL Career Shaper COE & NASSCOM FutureSkills Prime")
     ]
     for row_idx, (k, v) in enumerate(meta):
         row = info_table.rows[row_idx]
@@ -329,9 +328,8 @@ def generate_srs_pdf(output_path):
     meta_data = [
         [Paragraph("<b>Standard / Classification:</b>", body_style), Paragraph("IEEE Std 830-1998 / ISO/IEC/IEEE 29148 Standard SRS", body_style)],
         [Paragraph("<b>Evaluation Body:</b>", body_style), Paragraph("HCL Career Shaper COE & NASSCOM FutureSkills Prime", body_style)],
-        [Paragraph("<b>Candidate Name & ID:</b>", body_style), Paragraph("[Student Full Name] | ID: [Student Roll / LMS ID]", body_style)],
-        [Paragraph("<b>Target Horizon:</b>", body_style), Paragraph("2015 – 2024 UN Comtrade Benchmark ($302.18B Gross Trade)", body_style)],
-        [Paragraph("<b>Release Version & Date:</b>", body_style), Paragraph("Version 1.0 (Final Release) | 1st November 2026", body_style)]
+        [Paragraph("<b>Candidate Name:</b>", body_style), Paragraph("Anshu Kumar", body_style)],
+        [Paragraph("<b>Target Horizon:</b>", body_style), Paragraph("2015 – 2024 UN Comtrade Benchmark ($302.18B Gross Trade)", body_style)]
     ]
     t_meta = Table(meta_data, colWidths=[140, 390])
     t_meta.setStyle(TableStyle([

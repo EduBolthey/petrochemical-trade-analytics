@@ -1192,7 +1192,7 @@ ORDER BY Total_Value_Billions DESC;
 elif app_mode == "📑 LMS Submission Deliverables":
     render_header(
         "HCL CAREER SHAPER & NASSCOM LMS SUBMISSION HUB",
-        "Official submission repository complying with HCL Career Shaper COE & NASSCOM evaluation standards. Portal Deadline: 1st November 2026, 6:00 PM.",
+        "Official submission repository complying with HCL Career Shaper COE & NASSCOM evaluation standards.",
         "COE PORTAL HUB"
     )
 
@@ -1202,8 +1202,8 @@ elif app_mode == "📑 LMS Submission Deliverables":
             🎓 HCL Career Shaper COE & NASSCOM Submission Checklist
         </div>
         <div style="font-size: 0.88rem; line-height: 1.5; color: inherit;">
+            <b>• Candidate Name:</b> Anshu Kumar<br/>
             <b>• Submission Location:</b> COE Section under <i>My Learning</i> on your LMS portal.<br/>
-            <b>• Hard Deadline:</b> <b>1st November 2026, by 6:00 PM IST</b>.<br/>
             <b>• Mandatory Deliverables:</b><br/>
             &nbsp;&nbsp;1. <b>Code File:</b> Single compiled PDF or DOCX file (Download <code>02_Complete_Project_Code_File</code> below).<br/>
             &nbsp;&nbsp;2. <b>Project Screenshots:</b> Deployed system and working demo (Download <code>03_Project_Screenshots_and_Working</code> below).<br/>

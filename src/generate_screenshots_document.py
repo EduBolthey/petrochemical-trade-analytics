@@ -119,14 +119,13 @@ def generate_screenshots_docx(output_path):
     r3.font.color.rgb = RGBColor(100, 116, 139)
 
     # Info Table
-    info_table = doc.add_table(rows=5, cols=2)
+    info_table = doc.add_table(rows=4, cols=2)
     info_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     meta = [
         ("Curriculum / Program:", "HCL Career Shaper COE & NASSCOM FutureSkills Prime"),
         ("Project Title:", "Petrochemical Trade Analytics & Predictive Intelligence"),
-        ("Candidate Name & ID:", "[Student Full Name] | ID: [Student Roll / LMS ID]"),
-        ("Total Visual Demonstrations:", f"{len(SCREENSHOT_ITEMS)} High-Resolution Figures & Captions"),
-        ("Submission Date:", "1st November 2026, 6:00 PM")
+        ("Candidate Name:", "Anshu Kumar"),
+        ("Scope:", "Visual Evidence of Working Application & Analytics")
     ]
     for row_idx, (k, v) in enumerate(meta):
         row = info_table.rows[row_idx]
@@ -248,9 +247,8 @@ def generate_screenshots_pdf(output_path):
     # Meta Table
     meta_data = [
         [Paragraph("<b>Curriculum Track:</b>", cap_style), Paragraph("HCL Career Shaper COE & NASSCOM FutureSkills Prime", cap_style)],
-        [Paragraph("<b>Candidate Name & ID:</b>", cap_style), Paragraph("[Student Full Name] | ID: [Student Roll / LMS ID]", cap_style)],
-        [Paragraph("<b>Scope:</b>", cap_style), Paragraph(f"Visual Evidence of Working Application & Analytics ({len(SCREENSHOT_ITEMS)} Figures)", cap_style)],
-        [Paragraph("<b>Submission Date:</b>", cap_style), Paragraph("1st November 2026, 6:00 PM", cap_style)]
+        [Paragraph("<b>Candidate Name:</b>", cap_style), Paragraph("Anshu Kumar", cap_style)],
+        [Paragraph("<b>Scope:</b>", cap_style), Paragraph("Visual Evidence of Working Application & Analytics", cap_style)]
     ]
     meta_t = Table(meta_data, colWidths=[130, 410])
     meta_t.setStyle(TableStyle([

@@ -54,7 +54,7 @@ def generate_docx_report():
     # Metadata Box
     meta_p = doc.add_paragraph()
     meta_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    meta_run = meta_p.add_run("Capstone Academic Project Submission | Timeframe: 2015–2024 | Data Source: UN Comtrade\n")
+    meta_run = meta_p.add_run("Capstone Academic Project Submission | Candidate: Anshu Kumar | Timeframe: 2015–2024 | Data Source: UN Comtrade\n")
     meta_run.font.size = Pt(10)
     
     doc.add_paragraph().paragraph_format.space_after = Pt(12)
@@ -223,6 +223,7 @@ def generate_pdf_reports():
     
     story.append(Paragraph("PETROCHEMICAL TRADE ANALYTICS", title_style))
     story.append(Paragraph("Global Trade Flows, Statistical Inference, Predictive Machine Learning, and Power BI Architecture", sub_style))
+    story.append(Paragraph("Candidate Name: Anshu Kumar | HCL Career Shaper COE & NASSCOM FutureSkills Prime", sub_style))
     story.append(Spacer(1, 8))
     story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor("#2A9D8F"), spaceBefore=4, spaceAfter=12))
     

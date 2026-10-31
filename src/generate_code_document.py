@@ -140,14 +140,13 @@ def generate_code_docx(output_path):
     r3.font.color.rgb = RGBColor(100, 116, 139)
 
     # Info Box Table
-    info_table = doc.add_table(rows=5, cols=2)
+    info_table = doc.add_table(rows=4, cols=2)
     info_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     meta = [
         ("Program / Submission:", "HCL Career Shaper COE & NASSCOM FutureSkills Prime"),
         ("Project Title:", "Petrochemical Trade Analytics & Predictive Intelligence"),
-        ("Author / Candidate:", "[Student Full Name] | ID: [Student Roll / LMS ID]"),
-        ("Total Code Files:", f"{len(CODE_FILES)} Source Code Modules"),
-        ("Submission Deadline:", "1st November 2026, 6:00 PM")
+        ("Author / Candidate:", "Anshu Kumar"),
+        ("Total Code Files:", f"{len(CODE_FILES)} Source Code Modules")
     ]
     for row_idx, (k, v) in enumerate(meta):
         row = info_table.rows[row_idx]
@@ -326,9 +325,8 @@ def generate_code_pdf(output_path):
     # Meta Table
     meta_data = [
         [Paragraph("<b>Curriculum Track:</b>", desc_style), Paragraph("HCL Career Shaper COE & NASSCOM FutureSkills Prime", desc_style)],
-        [Paragraph("<b>Author / Candidate:</b>", desc_style), Paragraph("[Student Full Name] | ID: [Student Roll / LMS ID]", desc_style)],
-        [Paragraph("<b>Scope & Modules:</b>", desc_style), Paragraph(f"Complete End-to-End Codebase ({len(CODE_FILES)} Source Files)", desc_style)],
-        [Paragraph("<b>Submission Date:</b>", desc_style), Paragraph("1st November 2026, 6:00 PM", desc_style)]
+        [Paragraph("<b>Author / Candidate:</b>", desc_style), Paragraph("Anshu Kumar", desc_style)],
+        [Paragraph("<b>Scope & Modules:</b>", desc_style), Paragraph(f"Complete End-to-End Codebase ({len(CODE_FILES)} Source Files)", desc_style)]
     ]
     t = Table(meta_data, colWidths=[120, 420])
     t.setStyle(TableStyle([

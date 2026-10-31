@@ -46,15 +46,14 @@ def generate_synopsis_docx(output_path):
     r_s.font.color.rgb = RGBColor(0, 173, 181)
 
     # Info Box Table
-    info_table = doc.add_table(rows=6, cols=2)
+    info_table = doc.add_table(rows=5, cols=2)
     info_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     meta = [
         ("Project Title:", "Petrochemical Trade Analytics & Predictive Intelligence"),
         ("Curriculum / Track:", "HCL Career Shaper COE - Data Science & Advanced Analytics Track"),
         ("Affiliated Program:", "NASSCOM FutureSkills Prime Emerging Technologies Initiative"),
-        ("Candidate Name & ID:", "[Student Full Name] | LMS ID: [Student Roll / LMS ID]"),
-        ("Time Horizon & Data:", "2015 - 2024 (10 Years) | UN Comtrade Official Database"),
-        ("Submission Deadline:", "1st November 2026, 6:00 PM")
+        ("Candidate Name:", "Anshu Kumar"),
+        ("Time Horizon & Data:", "2015 - 2024 (10 Years) | UN Comtrade Official Database")
     ]
     for row_idx, (k, v) in enumerate(meta):
         row = info_table.rows[row_idx]
@@ -263,9 +262,8 @@ def generate_synopsis_pdf(output_path):
         [Paragraph("<b>Project Title:</b>", body_style), Paragraph("Petrochemical Trade Analytics & Predictive Intelligence", body_style)],
         [Paragraph("<b>Curriculum / Track:</b>", body_style), Paragraph("HCL Career Shaper COE - Data Science & Advanced Analytics Track", body_style)],
         [Paragraph("<b>Affiliated Program:</b>", body_style), Paragraph("NASSCOM FutureSkills Prime Emerging Technologies Initiative", body_style)],
-        [Paragraph("<b>Candidate Name & ID:</b>", body_style), Paragraph("[Student Full Name] | LMS ID: [Student Roll / LMS ID]", body_style)],
-        [Paragraph("<b>Data & Horizon:</b>", body_style), Paragraph("2015 – 2024 (10 Years) | UN Comtrade Benchmark ($302.18B Gross Trade)", body_style)],
-        [Paragraph("<b>Submission Date:</b>", body_style), Paragraph("1st November 2026, 6:00 PM", body_style)]
+        [Paragraph("<b>Candidate Name:</b>", body_style), Paragraph("Anshu Kumar", body_style)],
+        [Paragraph("<b>Data & Horizon:</b>", body_style), Paragraph("2015 – 2024 (10 Years) | UN Comtrade Benchmark ($302.18B Gross Trade)", body_style)]
     ]
     meta_t = Table(meta_data, colWidths=[150, 370])
     meta_t.setStyle(TableStyle([
