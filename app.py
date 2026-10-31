@@ -1208,7 +1208,7 @@ elif app_mode == "📑 LMS Submission Deliverables":
             &nbsp;&nbsp;1. <b>Code File:</b> Single compiled PDF or DOCX file (Download <code>02_Complete_Project_Code_File</code> below).<br/>
             &nbsp;&nbsp;2. <b>Project Screenshots:</b> Deployed system and working demo (Download <code>03_Project_Screenshots_and_Working</code> below).<br/>
             &nbsp;&nbsp;3. <b>Project Synopsis:</b> Formal academic synopsis (Download <code>01_Project_Synopsis</code> below).<br/>
-            &nbsp;&nbsp;4. <b>Project Report, Datasets & Models:</b> Comprehensive report, Cleaned CSV, ML evaluation, Excel model & Power BI guide.<br/>
+            &nbsp;&nbsp;4. <b>Project Report, SRS, Datasets & Models:</b> Comprehensive report, IEEE-830 SRS blueprint, Cleaned CSV, ML evaluation, Excel model & Power BI guide.<br/>
             <b>• Important Note:</b> Assessment will be marked <b>100% complete</b> only after completing all COE learning modules.
         </div>
     </div>
@@ -1231,6 +1231,8 @@ elif app_mode == "📑 LMS Submission Deliverables":
                 c_icon, doc_type, color_chip = "📸", "3. Mandatory: Project Screenshots & Working Demo" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#F59E0B"
             elif "Report" in f:
                 c_icon, doc_type, color_chip = "📘", "4. Comprehensive Academic Report" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#8B5CF6"
+            elif "SRS" in f or "Software_Requirements" in f:
+                c_icon, doc_type, color_chip = "📑", "5. Software Requirements Specification (SRS - IEEE 830)" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#06B6D4"
             elif f.endswith(".xlsx"):
                 c_icon, doc_type, color_chip = "📗", "Executive Financial Model (Excel XLSX)", "#10B981"
             elif "Cleaned" in f:
