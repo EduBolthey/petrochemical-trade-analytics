@@ -861,7 +861,9 @@ elif app_mode == "⚖️ Econometric Hypothesis Lab":
         "ACADEMIC LAB"
     )
 
-    hyp_file = "submission_files/04_Statistical_Hypothesis_Testing_Results.csv"
+    hyp_file = "submission_files/07_Statistical_Hypothesis_Testing_Results.csv"
+    if not os.path.exists(hyp_file):
+        hyp_file = "submission_files/04_Statistical_Hypothesis_Testing_Results.csv"
     if os.path.exists(hyp_file):
         hyp_df = pd.read_csv(hyp_file)
 
@@ -1189,25 +1191,60 @@ ORDER BY Total_Value_Billions DESC;
 # =============================================================================
 elif app_mode == "📑 LMS Submission Deliverables":
     render_header(
-        "COLLEGE LMS SUBMISSION DELIVERABLES HUB",
-        "Direct access to pre-compiled, publication-ready academic submission files complying with portal guidelines.",
-        "ACADEMIC DELIVERABLES"
+        "HCL CAREER SHAPER & NASSCOM LMS SUBMISSION HUB",
+        "Official submission repository complying with HCL Career Shaper COE & NASSCOM evaluation standards. Portal Deadline: 1st November 2026, 6:00 PM.",
+        "COE PORTAL HUB"
     )
+
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, rgba(0, 173, 181, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%); border: 1px solid #00ADB5; border-radius: 12px; padding: 16px 20px; margin-bottom: 22px;">
+        <div style="font-size: 1.05rem; font-weight: 800; color: #00ADB5; margin-bottom: 6px;">
+            🎓 HCL Career Shaper COE & NASSCOM Submission Checklist
+        </div>
+        <div style="font-size: 0.88rem; line-height: 1.5; color: inherit;">
+            <b>• Submission Location:</b> COE Section under <i>My Learning</i> on your LMS portal.<br/>
+            <b>• Hard Deadline:</b> <b>1st November 2026, by 6:00 PM IST</b>.<br/>
+            <b>• Mandatory Deliverables:</b><br/>
+            &nbsp;&nbsp;1. <b>Code File:</b> Single compiled PDF or DOCX file (Download <code>02_Complete_Project_Code_File</code> below).<br/>
+            &nbsp;&nbsp;2. <b>Project Screenshots:</b> Deployed system and working demo (Download <code>03_Project_Screenshots_and_Working</code> below).<br/>
+            &nbsp;&nbsp;3. <b>Project Synopsis:</b> Formal academic synopsis (Download <code>01_Project_Synopsis</code> below).<br/>
+            &nbsp;&nbsp;4. <b>Project Report, Datasets & Models:</b> Comprehensive report, Cleaned CSV, ML evaluation, Excel model & Power BI guide.<br/>
+            <b>• Important Note:</b> Assessment will be marked <b>100% complete</b> only after completing all COE learning modules.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     sub_dir = "submission_files"
     if os.path.exists(sub_dir):
-        files = sorted(os.listdir(sub_dir))
+        # Exclude internal duplicate tracking files
+        files = [f for f in sorted(os.listdir(sub_dir)) if not f.startswith("04_Statistical")]
         deliv_cols = st.columns(2)
         for i, f in enumerate(files):
             fp = os.path.join(sub_dir, f)
             size_kb = os.path.getsize(fp) / 1024
 
-            if f.endswith(".pdf"):
-                c_icon, doc_type, color_chip = "📕", "Academic Report (PDF)" if "Report" in f else "Power BI DAX Guide (PDF)", "#EF4444"
+            if "Synopsis" in f:
+                c_icon, doc_type, color_chip = "📄", "1. Mandatory: Project Synopsis" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#38BDF8"
+            elif "Code" in f:
+                c_icon, doc_type, color_chip = "💻", "2. Mandatory: Complete Code Compendium" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#10B981"
+            elif "Screenshots" in f:
+                c_icon, doc_type, color_chip = "📸", "3. Mandatory: Project Screenshots & Working Demo" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#F59E0B"
+            elif "Report" in f:
+                c_icon, doc_type, color_chip = "📘", "4. Comprehensive Academic Report" + (" (DOCX)" if f.endswith(".docx") else " (PDF)"), "#8B5CF6"
             elif f.endswith(".xlsx"):
-                c_icon, doc_type, color_chip = "📗", "Executive Financial Model (Excel)", "#10B981"
+                c_icon, doc_type, color_chip = "📗", "Executive Financial Model (Excel XLSX)", "#10B981"
+            elif "Cleaned" in f:
+                c_icon, doc_type, color_chip = "📊", "Cleaned UN Comtrade Dataset (CSV)", "#00ADB5"
+            elif "Predictions" in f:
+                c_icon, doc_type, color_chip = "🤖", "ML Predictions & Test Evaluation (CSV)", "#F43F5E"
+            elif "Hypothesis" in f:
+                c_icon, doc_type, color_chip = "⚖️", "Statistical Hypothesis Test Results (CSV)", "#F59E0B"
+            elif "PowerBI" in f:
+                c_icon, doc_type, color_chip = "📊", "Power BI DAX & Data Model Guide (PDF)", "#EAB308"
+            elif f.endswith(".pdf"):
+                c_icon, doc_type, color_chip = "📕", "Academic PDF Document", "#EF4444"
             elif f.endswith(".docx"):
-                c_icon, doc_type, color_chip = "📘", "Academic Capstone Report (Word)", "#3B82F6"
+                c_icon, doc_type, color_chip = "📘", "Academic Word Document", "#3B82F6"
             elif f.endswith(".csv"):
                 c_icon, doc_type, color_chip = "📊", "Tabular Dataset (CSV)", "#F59E0B"
             else:
